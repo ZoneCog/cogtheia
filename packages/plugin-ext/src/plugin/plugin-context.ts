@@ -238,7 +238,9 @@ import {
     DebugVisualization,
     TerminalShellExecutionCommandLineConfidence,
     TerminalCompletionItemKind,
-    TerminalCompletionList
+    TerminalCompletionList,
+    McpHttpServerDefinition,
+    McpStdioServerDefinition
 } from './types-impl';
 import { AuthenticationExtImpl } from './authentication-ext';
 import { SymbolKind } from '../common/plugin-api-rpc-model';
@@ -287,6 +289,7 @@ import { NotebookEditorsExtImpl } from './notebook/notebook-editors';
 import { TestingExtImpl } from './tests';
 import { UriExtImpl } from './uri-ext';
 import { PluginLogger } from './logger';
+import { LmExtImpl } from './lm-ext';
 
 export function createAPIObject<T extends Object>(rawObject: T): T {
     return new Proxy(rawObject, {
@@ -351,6 +354,7 @@ export function createAPIFactory(
     const telemetryExt = rpc.set(MAIN_RPC_CONTEXT.TELEMETRY_EXT, new TelemetryExtImpl());
     const testingExt = rpc.set(MAIN_RPC_CONTEXT.TESTING_EXT, new TestingExtImpl(rpc, commandRegistry));
     const uriExt = rpc.set(MAIN_RPC_CONTEXT.URI_EXT, new UriExtImpl(rpc));
+    const lmExt = rpc.set(MAIN_RPC_CONTEXT.MCP_SERVER_DEFINITION_REGISTRY_EXT, new LmExtImpl(rpc));
     rpc.set(MAIN_RPC_CONTEXT.DEBUG_EXT, debugExt);
 
     const commandLogger = new PluginLogger(rpc, 'commands-plugin');
@@ -781,24 +785,37 @@ export function createAPIFactory(
             onDidChangeConfiguration(listener, thisArgs?, disposables?): theia.Disposable {
                 return preferenceRegistryExt.onDidChangeConfiguration(listener, thisArgs, disposables);
             },
-            async openTextDocument(uriOrFileNameOrOptions?: theia.Uri | string | { language?: string; content?: string; }): Promise<theia.TextDocument | undefined> {
-                const options = uriOrFileNameOrOptions as { language?: string; content?: string; };
-
+            decode(content: Uint8Array, options?: { uri?: theia.Uri; encoding?: string }) {
+                return workspaceExt.decode(content, options);
+            },
+            encode(content: string, options?: { uri?: theia.Uri; encoding?: string }) {
+                return workspaceExt.encode(content, options);
+            },
+            async openTextDocument(
+                uriOrPathOrOptions?: theia.Uri | string | { language?: string; content?: string; encoding?: string },
+                options?: { readonly encoding?: string }
+            ): Promise<theia.TextDocument | undefined> {
                 let uri: URI;
-                if (typeof uriOrFileNameOrOptions === 'string') {
-                    uri = URI.file(uriOrFileNameOrOptions);
+                let documentOptions: { language?: string; content?: string; encoding?: string } | undefined;
 
-                } else if (uriOrFileNameOrOptions instanceof URI) {
-                    uri = uriOrFileNameOrOptions;
-
-                } else if (!options || typeof options === 'object') {
-                    uri = await documents.createDocumentData(options);
-
+                if (typeof uriOrPathOrOptions === 'string') {
+                    // It's a file path
+                    uri = URI.file(uriOrPathOrOptions);
+                    documentOptions = options;
+                } else if (URI.isUri(uriOrPathOrOptions)) {
+                    // It's a URI
+                    uri = uriOrPathOrOptions;
+                    documentOptions = options;
+                } else if (!uriOrPathOrOptions || typeof uriOrPathOrOptions === 'object') {
+                    // It's options for creating a new document
+                    documentOptions = uriOrPathOrOptions as { language?: string; content?: string; encoding?: string };
+                    uri = await documents.createDocumentData(documentOptions);
                 } else {
-                    return Promise.reject(new Error('illegal argument - uriOrFileNameOrOptions'));
+                    return Promise.reject(new Error('illegal argument - uriOrPathOrOptions'));
                 }
 
-                const data = await documents.openDocument(uri);
+                // If we have options with encoding from any source, we need to pass them to openDocument
+                const data = await documents.openDocument(uri, documentOptions);
                 return data && data.document;
             },
             async openNotebookDocument(uriOrType: theia.Uri | string, content?: NotebookData): Promise<theia.NotebookDocument | undefined> {
@@ -1342,6 +1359,9 @@ export function createAPIFactory(
             }
         };
 
+        const mcpContributions = plugin.rawModel.contributes && plugin.rawModel.contributes.mcpServerDefinitionProviders || [];
+        lmExt.registerMcpContributions(mcpContributions);
+
         const lm: typeof theia.lm = {
             /** @stubbed LanguageModelChat */
             selectChatModels(selector?: theia.LanguageModelChatSelector): Thenable<theia.LanguageModelChat[]> {
@@ -1358,7 +1378,10 @@ export function createAPIFactory(
                 return Disposable.NULL;
             },
             /** @stubbed LanguageModelTool */
-            tools: []
+            tools: [],
+            registerMcpServerDefinitionProvider(id: string, provider: any): theia.Disposable {
+                return lmExt.registerMcpServerDefinitionProvider(id, provider);
+            }
         };
 
         return <typeof theia>{
@@ -1589,7 +1612,9 @@ export function createAPIFactory(
             DebugVisualization,
             TerminalShellExecutionCommandLineConfidence,
             TerminalCompletionItemKind,
-            TerminalCompletionList
+            TerminalCompletionList,
+            McpHttpServerDefinition,
+            McpStdioServerDefinition
         };
     };
 }

@@ -20,6 +20,9 @@ import { nls } from '@theia/core';
 
 export const API_KEY_PREF = 'ai-features.google.apiKey';
 export const MODELS_PREF = 'ai-features.google.models';
+export const MAX_RETRIES = 'ai-features.google.maxRetriesOnErrors';
+export const RETRY_DELAY_RATE_LIMIT = 'ai-features.google.retryDelayOnRateLimitError';
+export const RETRY_DELAY_OTHER_ERRORS = 'ai-features.google.retryDelayOnOtherErrors';
 
 export const GooglePreferencesSchema: PreferenceSchema = {
     type: 'object',
@@ -35,10 +38,36 @@ export const GooglePreferencesSchema: PreferenceSchema = {
             type: 'array',
             description: nls.localize('theia/ai/google/models/description', 'Official Google Gemini models to use'),
             title: AI_CORE_PREFERENCES_TITLE,
-            default: ['gemini-2.0-flash', 'gemini-2.5-flash-preview-04-17', 'gemini-2.5-pro-exp-03-25', 'gemini-2.0-pro-exp-02-05'],
+            default: ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-2.0-flash', 'gemini-2.0-flash-lite', 'gemini-2.5-flash-preview-05-20', 'gemini-2.5-pro-preview-05-06'],
             items: {
                 type: 'string'
             }
         },
+        [MAX_RETRIES]: {
+            type: 'integer',
+            description: nls.localize('theia/ai/google/maxRetriesOnErrors/description',
+                'Maximum number of retries in case of errors. If smaller than 1, then the retry logic is disabled'),
+            title: AI_CORE_PREFERENCES_TITLE,
+            default: 3,
+            minimum: 0
+        },
+        [RETRY_DELAY_RATE_LIMIT]: {
+            type: 'number',
+            description: nls.localize('theia/ai/google/retryDelayOnRateLimitError/description',
+                'Delay in seconds between retries in case of rate limit errors. See https://ai.google.dev/gemini-api/docs/rate-limits'),
+            title: AI_CORE_PREFERENCES_TITLE,
+            default: 60,
+            minimum: 0
+        },
+        [RETRY_DELAY_OTHER_ERRORS]: {
+            type: 'number',
+            description: nls.localize('theia/ai/google/retryDelayOnOtherErrors/description',
+                'Delay in seconds between retries in case of other errors (sometimes the Google GenAI reports errors such as incomplete JSON syntax returned from the model \
+                or 500 Internal Server Error). Setting this to -1 prevents retries in these cases. Otherwise a retry happens either immediately (if set to 0) or after \
+                this delay in seconds (if set to a positive number).'),
+            title: AI_CORE_PREFERENCES_TITLE,
+            default: -1,
+            minimum: -1
+        }
     }
 };

@@ -45,6 +45,7 @@ import { SimpleMonacoEditor } from './simple-monaco-editor';
 import { ICodeEditorWidgetOptions } from '@theia/monaco-editor-core/esm/vs/editor/browser/widget/codeEditor/codeEditorWidget';
 import { timeoutReject } from '@theia/core/lib/common/promise-util';
 import { FileSystemPreferences } from '@theia/filesystem/lib/browser';
+import { insertFinalNewline } from './monaco-utilities';
 
 export const MonacoEditorFactory = Symbol('MonacoEditorFactory');
 export interface MonacoEditorFactory {
@@ -137,8 +138,10 @@ export class MonacoEditorProvider {
         ];
         const toDispose = new DisposableCollection();
         const editor = await factory(overrides, toDispose);
-        if (editor instanceof MonacoEditor) {
+        if (editor instanceof SimpleMonacoEditor || editor instanceof MonacoEditor) {
             editor.onDispose(() => toDispose.dispose());
+        }
+        if (editor instanceof MonacoEditor) {
 
             this.injectKeybindingResolver(editor);
 
@@ -224,7 +227,7 @@ export class MonacoEditorProvider {
         }));
         toDispose.push(editor.onLanguageChanged(() => this.updateMonacoEditorOptions(editor)));
         toDispose.push(editor.onDidChangeReadOnly(() => this.updateReadOnlyMessage(options, model.readOnly)));
-        toDispose.push(editor.document.registerWillSaveModelListener((_, token, o) => this.runSaveParticipants(editor, token, o)));
+        toDispose.push(editor.document.onModelWillSaveModel(e => this.runSaveParticipants(editor, e.token, e.options)));
         return editor;
     }
 
@@ -347,7 +350,7 @@ export class MonacoEditorProvider {
     }
 
     /**
-     * Creates an instance of the standard MonacoEditor with a StandaloneCodeEditor as its Monaco delegeate.
+     * Creates an instance of the standard MonacoEditor with a StandaloneCodeEditor as its Monaco delegate.
      * Among other differences, these editors execute basic actions like typing or deletion via commands that may be overridden by extensions.
      * @deprecated Most use cases for inline editors should be served by `createSimpleInline` instead.
      */
@@ -375,10 +378,9 @@ export class MonacoEditorProvider {
     }
 
     /**
-     * Creates an instance of the standard MonacoEditor with a CodeEditorWidget as its Monaco delegeate.
+     * Creates an instance of the standard MonacoEditor with a CodeEditorWidget as its Monaco delegate.
      * In addition to the service customizability of the StandaloneCodeEditor,This editor allows greater customization the editor contributions active in the widget.
      * See {@link ICodeEditorWidgetOptions.contributions}.
-     * @deprecated Most use cases for inline editors should be served by `createSimpleInline` instead.
      */
     async createSimpleInline(uri: URI, node: HTMLElement, options?: MonacoEditor.IOptions, widgetOptions?: ICodeEditorWidgetOptions): Promise<SimpleMonacoEditor> {
         return this.doCreateEditor(uri, async (override, toDispose) => {
@@ -551,38 +553,13 @@ export class MonacoEditorProvider {
         if (shouldRemoveWhiteSpace) {
             await editor.runAction('editor.action.trimTrailingWhitespace');
         }
-        const insertFinalNewline = this.filePreferences.get({ preferenceName: 'files.insertFinalNewline', overrideIdentifier }, undefined, uri);
-        if (insertFinalNewline) {
+        const shouldInsertFinalNewline = this.filePreferences.get({ preferenceName: 'files.insertFinalNewline', overrideIdentifier }, undefined, uri);
+        if (shouldInsertFinalNewline) {
             this.insertFinalNewline(model);
         }
     }
 
     protected insertFinalNewline(editorModel: MonacoEditorModel): void {
-        const model = editorModel.textEditorModel;
-        if (!model) {
-            return;
-        }
-
-        const lines = model?.getLineCount();
-        if (lines === 0) {
-            return;
-        }
-
-        const lastLine = model?.getLineContent(lines);
-        if (lastLine.trim() === '') {
-            return;
-        }
-
-        const lastLineMaxColumn = model?.getLineMaxColumn(lines);
-        const range = {
-            startLineNumber: lines,
-            startColumn: lastLineMaxColumn,
-            endLineNumber: lines,
-            endColumn: lastLineMaxColumn
-        };
-        model.applyEdits([{
-            range,
-            text: model?.getEOL()
-        }]);
+        insertFinalNewline(editorModel);
     }
 }

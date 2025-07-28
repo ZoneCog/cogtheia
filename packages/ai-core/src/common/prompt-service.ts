@@ -14,7 +14,7 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { Event, Emitter, URI } from '@theia/core';
+import { Event, Emitter, URI, ILogger, DisposableCollection } from '@theia/core';
 import { inject, injectable, optional, postConstruct } from '@theia/core/shared/inversify';
 import { AIVariableArg, AIVariableContext, AIVariableService, createAIResolveVariableCache, ResolvedAIVariable } from './variable-service';
 import { ToolInvocationRegistry } from './tool-invocation-registry';
@@ -283,7 +283,7 @@ export interface PromptService {
     /**
      * Event fired when the selected variant for a prompt variant set changes
      */
-    readonly onSelectedVariantChange: Event<{ promptVariantSetId: string, variantId: string }>;
+    readonly onSelectedVariantChange: Event<{ promptVariantSetId: string, variantId: string | undefined }>;
 
     /**
      * Gets the raw prompt fragment with comments
@@ -363,11 +363,20 @@ export interface PromptService {
     getVariantIds(promptVariantSetId: string): string[];
 
     /**
-     * Gets the currently selected variant ID of the given set
+     * Gets the explicitly selected variant ID for a prompt fragment from settings.
+     * This returns only the variant that was explicitly selected in settings, not the default.
      * @param promptVariantSetId The prompt variant set id
-     * @returns The selected variant ID or the main ID if no variant is selected
+     * @returns The selected variant ID from settings, or undefined if none is selected
      */
-    getSelectedVariantId(promptVariantSetId: string): Promise<string | undefined>;
+    getSelectedVariantId(promptVariantSetId: string): string | undefined;
+
+    /**
+     * Gets the effective variant ID that is guaranteed to be valid if one exists.
+     * This checks if the selected variant ID is valid, and falls back to the default variant if it isn't.
+     * @param promptVariantSetId The prompt variant set id
+     * @returns A valid variant ID if one exists, or undefined if no valid variant can be found
+     */
+    getEffectiveVariantId(promptVariantSetId: string): string | undefined;
 
     /**
      * Gets the default variant ID of the given set
@@ -408,11 +417,17 @@ export interface PromptService {
 
 @injectable()
 export class PromptServiceImpl implements PromptService {
+    @inject(ILogger)
+    protected readonly logger: ILogger;
+
     @inject(AISettingsService) @optional()
     protected readonly settingsService: AISettingsService | undefined;
 
     @inject(PromptFragmentCustomizationService) @optional()
     protected readonly customizationService: PromptFragmentCustomizationService | undefined;
+
+    // Map to store selected variant for each prompt variant set (key: promptVariantSetId, value: variantId)
+    protected _selectedVariantsMap = new Map<string, string>();
 
     @inject(AIVariableService) @optional()
     protected readonly variableService: AIVariableService | undefined;
@@ -434,19 +449,78 @@ export class PromptServiceImpl implements PromptService {
     readonly onPromptsChange = this._onPromptsChangeEmitter.event;
 
     // Event emitter for selected variant changes
-    protected _onSelectedVariantChangeEmitter = new Emitter<{ promptVariantSetId: string, variantId: string }>();
+    protected _onSelectedVariantChangeEmitter = new Emitter<{ promptVariantSetId: string, variantId: string | undefined }>();
     readonly onSelectedVariantChange = this._onSelectedVariantChangeEmitter.event;
+
+    protected promptChangeDebounceTimer?: NodeJS.Timeout;
+
+    protected toDispose = new DisposableCollection();
+
+    protected fireOnPromptsChangeDebounced(): void {
+        if (this.promptChangeDebounceTimer) {
+            clearTimeout(this.promptChangeDebounceTimer);
+        }
+        this.promptChangeDebounceTimer = setTimeout(() => {
+            this._onPromptsChangeEmitter.fire();
+        }, 300);
+    }
 
     @postConstruct()
     protected init(): void {
         if (this.customizationService) {
-            this.customizationService.onDidChangePromptFragmentCustomization(() => {
-                this._onPromptsChangeEmitter.fire();
-            });
-            this.customizationService.onDidChangeCustomAgents(() => {
-                this._onPromptsChangeEmitter.fire();
-            });
+            this.toDispose.pushAll([
+                this.customizationService.onDidChangePromptFragmentCustomization(() => {
+                    this.fireOnPromptsChangeDebounced();
+                }),
+                this.customizationService.onDidChangeCustomAgents(() => {
+                    this.fireOnPromptsChangeDebounced();
+                })
+            ]);
         }
+        if (this.settingsService) {
+            this.recalculateSelectedVariantsMap();
+            this.toDispose.push(
+                this.settingsService!.onDidChange(async () => {
+                    await this.recalculateSelectedVariantsMap();
+                })
+            );
+        }
+    }
+
+    /**
+     * Recalculates the selected variants map for all variant sets and fires the onSelectedVariantChangeEmitter
+     * if the selectedVariants field has changed.
+     */
+    protected async recalculateSelectedVariantsMap(): Promise<void> {
+        if (!this.settingsService) {
+            return;
+        }
+        const agentSettingsMap = await this.settingsService.getSettings();
+        const newSelectedVariants = new Map<string, string>();
+        for (const agentSettings of Object.values(agentSettingsMap)) {
+            if (agentSettings.selectedVariants) {
+                for (const [variantSetId, variantId] of Object.entries(agentSettings.selectedVariants)) {
+                    if (!newSelectedVariants.has(variantSetId)) {
+                        newSelectedVariants.set(variantSetId, variantId);
+                    }
+                }
+            }
+        }
+        // Compare with the old map and fire events for changes and removed variant sets
+        for (const [variantSetId, newVariantId] of newSelectedVariants.entries()) {
+            const oldVariantId = this._selectedVariantsMap.get(variantSetId);
+            if (oldVariantId !== newVariantId) {
+                this._onSelectedVariantChangeEmitter.fire({ promptVariantSetId: variantSetId, variantId: newVariantId });
+            }
+        }
+        for (const oldVariantSetId of this._selectedVariantsMap.keys()) {
+            if (!newSelectedVariants.has(oldVariantSetId)) {
+                this._onSelectedVariantChangeEmitter.fire({ promptVariantSetId: oldVariantSetId, variantId: undefined });
+            }
+        }
+        this._selectedVariantsMap = newSelectedVariants;
+        // Also fire a full prompts change, because other fields (like effectiveVariantId) might have changed
+        this.fireOnPromptsChangeDebounced();
     }
 
     // ===== Fragment Retrieval Methods =====
@@ -495,27 +569,49 @@ export class PromptServiceImpl implements PromptService {
         return commentRegex.test(templateText) ? templateText.replace(commentRegex, '').trimStart() : templateText;
     }
 
-    async getSelectedVariantId(fragmentId: string): Promise<string | undefined> {
-        if (this.settingsService) {
-            const agentSettingsMap = await this.settingsService.getSettings();
-
-            for (const agentSettings of Object.values(agentSettingsMap)) {
-                if (agentSettings.selectedVariants && agentSettings.selectedVariants[fragmentId]) {
-                    return agentSettings.selectedVariants[fragmentId];
-                }
-            }
-        }
-        return this.getDefaultVariantId(fragmentId);
+    getSelectedVariantId(variantSetId: string): string | undefined {
+        return this._selectedVariantsMap.get(variantSetId);
     }
 
-    protected async resolvePotentialSystemPrompt(promptFragmentId: string): Promise<PromptFragment | undefined> {
-        if (this._promptVariantSetsMap.has(promptFragmentId)) {
-            // This is a systemPrompt find the selected variant
-            const selectedVariantId = await this.getSelectedVariantId(promptFragmentId);
-            if (selectedVariantId === undefined) {
+    getEffectiveVariantId(variantSetId: string): string | undefined {
+        const selectedVariantId = this.getSelectedVariantId(variantSetId);
+
+        // Check if the selected variant actually exists
+        if (selectedVariantId) {
+            const variantIds = this.getVariantIds(variantSetId);
+            if (!variantIds.includes(selectedVariantId)) {
+                this.logger.warn(`Selected variant '${selectedVariantId}' for prompt set '${variantSetId}' does not exist. Falling back to default variant.`);
+            } else {
+                return selectedVariantId;
+            }
+        }
+
+        // Fall back to default variant
+        const defaultVariantId = this.getDefaultVariantId(variantSetId);
+        if (defaultVariantId) {
+            const variantIds = this.getVariantIds(variantSetId);
+            if (!variantIds.includes(defaultVariantId)) {
+                this.logger.error(`Default variant '${defaultVariantId}' for prompt set '${variantSetId}' does not exist.`);
                 return undefined;
             }
-            return this.getPromptFragment(selectedVariantId);
+            return defaultVariantId;
+        }
+
+        // No valid selected or default variant
+        if (this.getVariantIds(variantSetId).length > 0) {
+            this.logger.error(`No valid selected or default variant found for prompt set '${variantSetId}'.`);
+        }
+        return undefined;
+    }
+
+    protected resolvePotentialSystemPrompt(promptFragmentId: string): PromptFragment | undefined {
+        if (this._promptVariantSetsMap.has(promptFragmentId)) {
+            // This is a systemPrompt find the effective variant
+            const effectiveVariantId = this.getEffectiveVariantId(promptFragmentId);
+            if (effectiveVariantId === undefined) {
+                return undefined;
+            }
+            return this.getPromptFragment(effectiveVariantId);
         }
         return this.getPromptFragment(promptFragmentId);
     }
@@ -523,7 +619,7 @@ export class PromptServiceImpl implements PromptService {
     // ===== Fragment Resolution Methods =====
 
     async getResolvedPromptFragment(systemOrFragmentId: string, args?: { [key: string]: unknown }, context?: AIVariableContext): Promise<ResolvedPromptFragment | undefined> {
-        const promptFragment = await this.resolvePotentialSystemPrompt(systemOrFragmentId);
+        const promptFragment = this.resolvePotentialSystemPrompt(systemOrFragmentId);
         if (promptFragment === undefined) {
             return undefined;
         }
@@ -567,7 +663,7 @@ export class PromptServiceImpl implements PromptService {
         context?: AIVariableContext,
         resolveVariable?: (variable: AIVariableArg) => Promise<ResolvedAIVariable | undefined>
     ): Promise<Omit<ResolvedPromptFragment, 'functionDescriptions'> | undefined> {
-        const promptFragment = await this.resolvePotentialSystemPrompt(systemOrFragmentId);
+        const promptFragment = this.resolvePotentialSystemPrompt(systemOrFragmentId);
         if (promptFragment === undefined) {
             return undefined;
         }
@@ -722,11 +818,32 @@ export class PromptServiceImpl implements PromptService {
             }
         }
 
-        this._onPromptsChangeEmitter.fire();
+        this.fireOnPromptsChangeDebounced();
     }
 
-    getVariantIds(fragmentId: string): string[] {
-        return this._promptVariantSetsMap.get(fragmentId) || [];
+    getVariantIds(variantSetId: string): string[] {
+        const builtInVariants = this._promptVariantSetsMap.get(variantSetId) || [];
+
+        // Check for custom variants from customization service
+        if (this.customizationService) {
+            const allCustomizedIds = this.customizationService.getCustomizedPromptFragmentIds();
+            // Find customizations that start with the variant set ID
+            // These are considered variants of this variant set
+            // Only include IDs that are not the variant set ID itself, start with the variant set ID,
+            // and are not customizations of existing variants in this set
+            const customVariants = allCustomizedIds.filter(id =>
+                id !== variantSetId &&
+                id.startsWith(variantSetId) &&
+                !builtInVariants.includes(id)
+            );
+
+            if (customVariants.length > 0) {
+                // Combine built-in variants with custom variants, without modifying the internal state
+                return [...builtInVariants, ...customVariants];
+            }
+        }
+
+        return builtInVariants;
     }
 
     getDefaultVariantId(promptVariantSetId: string): string | undefined {
@@ -734,7 +851,31 @@ export class PromptServiceImpl implements PromptService {
     }
 
     getPromptVariantSets(): Map<string, string[]> {
-        return new Map(this._promptVariantSetsMap);
+        const result = new Map(this._promptVariantSetsMap);
+
+        // Check for custom variants from customization service
+        if (this.customizationService) {
+            const allCustomizedIds = this.customizationService.getCustomizedPromptFragmentIds();
+
+            // Add custom variants to existing variant sets
+            for (const [variantSetId, variants] of result.entries()) {
+                // Filter out customized fragments that are just customizations of existing variants
+                // so we don't treat them as separate variants themselves
+                // Only include IDs that are not the variant set ID itself, start with the variant set ID,
+                // and are not customizations of existing variants in this set
+                const customVariants = allCustomizedIds.filter(id =>
+                    id !== variantSetId &&
+                    id.startsWith(variantSetId) &&
+                    !variants.includes(id)
+                );
+
+                if (customVariants.length > 0) {
+                    // Create a new array without modifying the original
+                    result.set(variantSetId, [...variants, ...customVariants]);
+                }
+            }
+        }
+        return result;
     }
 
     addBuiltInPromptFragment(promptFragment: BasePromptFragment, promptVariantSetId?: string, isDefault: boolean = false): void {
@@ -752,7 +893,7 @@ export class PromptServiceImpl implements PromptService {
             this.addFragmentVariant(promptVariantSetId, promptFragment.id, isDefault);
         }
 
-        this._onPromptsChangeEmitter.fire();
+        this.fireOnPromptsChangeDebounced();
     }
 
     // ===== Variant Management Methods =====
@@ -861,7 +1002,9 @@ export class PromptServiceImpl implements PromptService {
     }
 
     async resetToBuiltIn(fragmentId: string): Promise<void> {
-        if (this.customizationService) {
+        const builtIn = this._builtInFragments.find(b => b.id === fragmentId);
+        // Only reset this if it has a built-in, otherwise a delete would be the correct operation
+        if (this.customizationService && builtIn) {
             await this.customizationService.removeAllPromptFragmentCustomizations(fragmentId);
         }
     }

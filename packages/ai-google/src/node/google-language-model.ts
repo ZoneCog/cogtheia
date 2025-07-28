@@ -23,10 +23,14 @@ import {
     LanguageModelStreamResponsePart,
     LanguageModelTextResponse,
     TokenUsageService,
-    UserRequest
+    UserRequest,
+    ImageContent,
+    ToolCallResult
 } from '@theia/ai-core';
 import { CancellationToken } from '@theia/core';
-import { GoogleGenAI, FunctionCallingConfigMode, FunctionDeclaration, Content, Schema, Part, Modality } from '@google/genai';
+import { GoogleGenAI, FunctionCallingConfigMode, FunctionDeclaration, Content, Schema, Part, Modality, FunctionResponse } from '@google/genai';
+import { wait } from '@theia/core/lib/common/promise-util';
+import { GoogleLanguageModelRetrySettings } from './google-language-models-manager-impl';
 
 interface ToolCallback {
     readonly name: string;
@@ -48,6 +52,8 @@ const convertMessageToPart = (message: LanguageModelMessage): Part[] | undefined
 
     } else if (LanguageModelMessage.isThinkingMessage(message)) {
         return [{ thought: true }, { text: message.thinking }];
+    } else if (LanguageModelMessage.isImageMessage(message) && ImageContent.isBase64(message.image)) {
+        return [{ inlineData: { data: message.image.base64data, mimeType: message.image.mimeType } }];
     }
 };
 /**
@@ -120,6 +126,7 @@ export class GoogleModel implements LanguageModel {
         public model: string,
         public enableStreaming: boolean,
         public apiKey: () => string | undefined,
+        public retrySettings: () => GoogleLanguageModelRetrySettings,
         protected readonly tokenUsageService?: TokenUsageService
     ) { }
 
@@ -154,24 +161,26 @@ export class GoogleModel implements LanguageModel {
         const { contents: parts, systemMessage } = transformToGeminiMessages(request.messages);
         const functionDeclarations = this.createFunctionDeclarations(request);
 
-        const stream = await genAI.models.generateContentStream({
-            model: this.model,
-            config: {
-                systemInstruction: systemMessage,
-                toolConfig: {
-                    functionCallingConfig: {
-                        mode: FunctionCallingConfigMode.AUTO,
-                    }
+        // Wrap the API call in the retry mechanism
+        const stream = await this.withRetry(async () =>
+            genAI.models.generateContentStream({
+                model: this.model,
+                config: {
+                    systemInstruction: systemMessage,
+                    toolConfig: {
+                        functionCallingConfig: {
+                            mode: FunctionCallingConfigMode.AUTO,
+                        }
+                    },
+                    responseModalities: [Modality.TEXT],
+                    tools: [{
+                        functionDeclarations
+                    }],
+                    temperature: 1,
+                    ...settings
                 },
-                responseModalities: [Modality.TEXT],
-                tools: [{
-                    functionDeclarations
-                }],
-                temperature: 1,
-                ...settings
-            },
-            contents: [...parts, ...(toolMessages ?? [])]
-        });
+                contents: [...parts, ...(toolMessages ?? [])]
+            }));
 
         const that = this;
 
@@ -272,15 +281,12 @@ export class GoogleModel implements LanguageModel {
                         }));
 
                         // Generate tool call responses
-                        const calls = toolResult.map(tr => {
-                            const resultAsString = typeof tr.result === 'string' ? tr.result : JSON.stringify(tr.result);
-                            return {
-                                finished: true,
-                                id: tr.id,
-                                result: resultAsString,
-                                function: { name: tr.name, arguments: tr.arguments }
-                            };
-                        });
+                        const calls = toolResult.map(tr => ({
+                            finished: true,
+                            id: tr.id,
+                            result: tr.result,
+                            function: { name: tr.name, arguments: tr.arguments }
+                        }));
                         yield { tool_calls: calls };
 
                         // Format tool responses for Gemini
@@ -288,7 +294,7 @@ export class GoogleModel implements LanguageModel {
                             functionResponse: {
                                 id: call.id,
                                 name: call.name,
-                                response: { output: call.result }
+                                response: that.formatToolCallResult(call.result)
                             }
                         }));
                         const responseMessage: Content = { role: 'user', parts: toolResponses };
@@ -321,6 +327,13 @@ export class GoogleModel implements LanguageModel {
         return { stream: asyncIterator };
     }
 
+    protected formatToolCallResult(result: ToolCallResult): FunctionResponse['response'] {
+        // If "output" and "error" keys are not specified, then whole "response" is treated as function output.
+        // There is no particular support for different types of output such as images so we use the structure provided by the tool call.
+        // Using the format that is used for image messages does not seem to yield any different results.
+        return { output: result };
+    }
+
     private createFunctionDeclarations(request: LanguageModelRequest): FunctionDeclaration[] {
         if (!request.tools || request.tools.length === 0) {
             return [];
@@ -341,7 +354,8 @@ export class GoogleModel implements LanguageModel {
         const { contents: parts, systemMessage } = transformToGeminiMessages(request.messages);
         const functionDeclarations = this.createFunctionDeclarations(request);
 
-        const model = await genAI.models.generateContent({
+        // Wrap the API call in the retry mechanism
+        const model = await this.withRetry(async () => genAI.models.generateContent({
             model: this.model,
             config: {
                 systemInstruction: systemMessage,
@@ -354,7 +368,7 @@ export class GoogleModel implements LanguageModel {
                 ...settings
             },
             contents: parts
-        });
+        }));
 
         try {
             const responseText = model.text;
@@ -386,5 +400,49 @@ export class GoogleModel implements LanguageModel {
 
         // TODO test vertexai
         return new GoogleGenAI({ apiKey, vertexai: false });
+    }
+
+    /**
+     * Implements a retry mechanism for the handle(non)Streaming request functions.
+     * @param fn the wrapped function to which the retry logic should be applied.
+     * @param retrySettings the configuration settings for the retry mechanism.
+     * @returns the result of the wrapped function.
+     */
+    private async withRetry<T>(fn: () => Promise<T>): Promise<T> {
+        const { maxRetriesOnErrors, retryDelayOnRateLimitError, retryDelayOnOtherErrors } = this.retrySettings();
+
+        for (let i = 0; i <= maxRetriesOnErrors; i++) {
+            try {
+                return await fn();
+            } catch (error) {
+                if (i === maxRetriesOnErrors) {
+                    // no retries left - throw the original error
+                    throw error;
+                }
+
+                const message = (error as Error).message;
+                // Check for rate limit exhaustion (usually, there is a rate limit per minute, so we can retry after a delay...)
+                if (message && message.includes('429 Too Many Requests')) {
+                    if (retryDelayOnRateLimitError < 0) {
+                        // rate limit error should not retried because of the setting
+                        throw error;
+                    }
+
+                    const delayMs = retryDelayOnRateLimitError * 1000;
+                    console.warn(`Received 429 (Too Many Requests). Retrying in ${retryDelayOnRateLimitError}s. Attempt ${i + 1} of ${maxRetriesOnErrors}.`);
+                    await wait(delayMs);
+                } else if (retryDelayOnOtherErrors < 0) {
+                    // Other errors should not retried because of the setting
+                    throw error;
+                } else {
+                    const delayMs = retryDelayOnOtherErrors * 1000;
+                    console.warn(`Request failed: ${message}. Retrying in ${retryDelayOnOtherErrors}s. Attempt ${i + 1} of ${maxRetriesOnErrors}.`);
+                    await wait(delayMs);
+                }
+                // -> reiterate the loop for the next attempt
+            }
+        }
+        // This should not be reached
+        throw new Error('Retry mechanism failed unexpectedly.');
     }
 }

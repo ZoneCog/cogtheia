@@ -601,8 +601,9 @@ export class ApplicationShell extends Widget {
                     // the files were dragged from the outside the workspace
                     Array.from(event.dataTransfer.files).forEach(async file => {
                         if (environment.electron.is()) {
-                            if (file.path) {
-                                const fileUri = URI.fromFilePath(file.path);
+                            const path = window.electronTheiaCore.getPathForFile(file);
+                            if (path) {
+                                const fileUri = URI.fromFilePath(path);
                                 openUri(fileUri);
                             }
                         } else {
@@ -655,7 +656,7 @@ export class ApplicationShell extends Widget {
         this.additionalDraggedUris = undefined;
     }
 
-    protected static getDraggedEditorUris(dataTransfer: DataTransfer): URI[] {
+    static getDraggedEditorUris(dataTransfer: DataTransfer): URI[] {
         const data = dataTransfer.getData('theia-editor-dnd');
         return data ? data.split('\n').map(entry => new URI(entry)) : [];
     }
@@ -1358,10 +1359,18 @@ export class ApplicationShell extends Widget {
             widget = this.rightPanelHandler.activate(id);
         }
         if (widget) {
-            this.windowService.focus();
+            this.focusWindowIfApplicationFocused();
             return widget;
         }
         return this.secondaryWindowHandler.activateWidget(id);
+    }
+
+    protected focusWindowIfApplicationFocused(): void {
+        // If this application has focus, then on widget activation, activate the window.
+        // If this application does not have focus, do not routinely steal focus.
+        if (this.secondaryWindowHandler.getFocusedWindow()) {
+            this.windowService.focus();
+        }
     }
 
     /**
@@ -1463,7 +1472,7 @@ export class ApplicationShell extends Widget {
             widget = this.rightPanelHandler.expand(id);
         }
         if (widget) {
-            this.windowService.focus();
+            this.focusWindowIfApplicationFocused();
             return widget;
         } else {
             return this.secondaryWindowHandler.revealWidget(id);

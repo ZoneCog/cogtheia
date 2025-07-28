@@ -251,8 +251,8 @@ export class DynamicMenuWidget extends MenuWidget {
     }
 
     protected override onBeforeDetach(msg: Message): void {
-        this.node.ownerDocument.removeEventListener('pointerdown', this);
-        super.onAfterDetach(msg);
+        this.node.ownerDocument.removeEventListener('pointerdown', this, true);
+        super.onBeforeDetach(msg);
     }
 
     override handleEvent(event: Event): void {
@@ -311,13 +311,6 @@ export class DynamicMenuWidget extends MenuWidget {
         while (items[items.length - 1]?.type === 'separator') {
             items.pop();
         }
-        // Add at least one entry to avoid empty menus.
-        // This is needed as Lumino does all kind of checks whether a menu is empty and for example prevents activating it
-        // This item will be cleared once the menu is opened via the next update as we don't have empty main menus
-        // See https://github.com/jupyterlab/lumino/issues/729
-        if (items.length === 0) {
-            items.push({ type: 'separator' });
-        }
         for (const item of items) {
             parent.addItem(item);
         }
@@ -336,18 +329,17 @@ export class DynamicMenuWidget extends MenuWidget {
                         if (submenu.items.length > 0) {
                             result.push({ type: 'submenu', submenu });
                         }
-                    } else {
+                    } else if (node.id !== 'inline') {
                         const items = this.createItems(nodePath, node.children, phCommandRegistry, contextMatcher, context);
                         if (items.length > 0) {
-                            if (node.id !== 'inline') {
+                            if (result[result.length - 1]?.type !== 'separator') {
                                 result.push({ type: 'separator' });
                             }
                             result.push(...items);
-                            if (node.id !== 'inline') {
-                                result.push({ type: 'separator' });
-                            }
+                            result.push({ type: 'separator' });
                         }
                     }
+
                 } else if (CommandMenu.is(node)) {
                     const id = !phCommandRegistry.hasCommand(node.id) ? node.id : `${node.id}:${DynamicMenuWidget.nextCommmandId++}`;
                     phCommandRegistry.addCommand(id, {
