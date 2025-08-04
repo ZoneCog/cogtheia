@@ -104,7 +104,39 @@ export interface PatternInput {
     data: any;
     context?: any;
     scope?: 'local' | 'global' | 'project';
+    options?: PatternRecognitionOptions;
 }
+
+/**
+ * Options for pattern recognition
+ */
+export interface PatternRecognitionOptions {
+    /** Maximum number of patterns to return */
+    maxResults?: number;
+    /** Minimum confidence threshold */
+    minConfidence?: number;
+    /** Specific pattern types to look for */
+    patternTypes?: PatternType[];
+    /** Whether to include low-confidence patterns */
+    includeLowConfidence?: boolean;
+}
+
+/**
+ * Types of patterns that can be recognized
+ */
+export type PatternType = 
+    | 'code' 
+    | 'structural' 
+    | 'behavioral' 
+    | 'syntax-pattern'
+    | 'design-pattern'
+    | 'async-pattern'
+    | 'reactive-pattern'
+    | 'sequence'
+    | 'repetition'
+    | 'hierarchical'
+    | 'interaction-rhythm'
+    | 'usage-profile';
 
 /**
  * Pattern recognition result
@@ -113,5 +145,22 @@ export interface PatternResult {
     pattern: any;
     confidence: number;
     instances: any[];
-    metadata?: Record<string, any>;
+    metadata?: PatternMetadata;
+}
+
+/**
+ * Metadata for pattern results
+ */
+export interface PatternMetadata {
+    patternType?: PatternType;
+    timestamp?: number;
+    language?: string;
+    complexity?: 'simple' | 'moderate' | 'complex';
+    frequency?: number;
+    depth?: number;
+    timespan?: number;
+    efficiency?: number;
+    variability?: number;
+    consistency?: number;
+    [key: string]: any;
 }
