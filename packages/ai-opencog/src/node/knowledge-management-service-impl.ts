@@ -15,8 +15,8 @@
 // *****************************************************************************
 
 import { injectable } from '@theia/core/shared/inversify';
+import { KnowledgeManagementService } from '../common/knowledge-management-service';
 import {
-    KnowledgeManagementService,
     KnowledgeGraph,
     KnowledgeCategory,
     KnowledgeDiscoveryQuery,

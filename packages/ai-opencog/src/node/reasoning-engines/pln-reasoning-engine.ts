@@ -343,7 +343,7 @@ export class PLNReasoningEngine {
         return (atom1.name === atom2.name) || 
                (atom1.type === atom2.type) ||
                (atom1.outgoing && atom2.outgoing && 
-                atom1.outgoing.some(a1 => atom2.outgoing!.some(a2 => a1.name === a2.name)));
+                atom1.outgoing.some(a1 => atom2.outgoing?.some(a2 => a1.name === a2.name))) || false;
     }
 
     /**
