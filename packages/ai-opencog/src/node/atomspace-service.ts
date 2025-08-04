@@ -14,7 +14,7 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { injectable } from '@theia/core/shared/inversify';
+import { injectable, inject } from '@theia/core/shared/inversify';
 import {
     Atom,
     AtomPattern,
@@ -23,16 +23,24 @@ import {
     LearningData,
     PatternInput,
     PatternResult,
-    OpenCogService
+    OpenCogService,
+    KnowledgeManagementService
 } from '../common';
+import { KnowledgeManagementServiceImpl } from './knowledge-management-service-impl';
 
 /**
  * AtomSpace implementation for storing and managing OpenCog atoms
+ * Enhanced with knowledge management capabilities
  */
 @injectable()
 export class AtomSpaceService implements OpenCogService {
     private atoms: Map<string, Atom> = new Map();
     private nextAtomId = 1;
+    private knowledgeManagementService: KnowledgeManagementService;
+
+    constructor() {
+        this.knowledgeManagementService = new KnowledgeManagementServiceImpl();
+    }
 
     async addAtom(atom: Atom): Promise<string> {
         const atomId = atom.id || this.generateAtomId();
@@ -201,5 +209,9 @@ export class AtomSpaceService implements OpenCogService {
             explanation: 'Abductive reasoning applied',
             metadata: { reasoningType: 'abductive' }
         };
+    }
+
+    getKnowledgeManagementService(): KnowledgeManagementService {
+        return this.knowledgeManagementService;
     }
 }
