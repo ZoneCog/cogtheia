@@ -25,7 +25,12 @@ import {
     PatternInput,
     PatternResult,
     OpenCogService,
-    OPENCOG_SERVICE_PATH
+    OPENCOG_SERVICE_PATH,
+    LearningModel,
+    AdaptationStrategy,
+    UserBehaviorPattern,
+    LearningContext,
+    UserFeedback
 } from '../common';
 
 /**
@@ -84,5 +89,67 @@ export class FrontendOpenCogService implements OpenCogService {
 
     async importAtomSpace(data: string): Promise<void> {
         return this.openCogService.importAtomSpace(data);
+    }
+
+    // Advanced learning and adaptation methods
+    async learnFromFeedback(feedback: UserFeedback, context: LearningContext): Promise<void> {
+        return this.openCogService.learnFromFeedback(feedback, context);
+    }
+
+    async adaptToUser(userId: string, domain: string, data: any): Promise<AdaptationStrategy> {
+        return this.openCogService.adaptToUser(userId, domain, data);
+    }
+
+    async getAdaptationStrategy(userId: string, domain: string): Promise<AdaptationStrategy | undefined> {
+        return this.openCogService.getAdaptationStrategy(userId, domain);
+    }
+
+    // Behavioral learning
+    async learnUserBehavior(userId: string, action: string, context: any): Promise<void> {
+        return this.openCogService.learnUserBehavior(userId, action, context);
+    }
+
+    async getUserBehaviorPatterns(userId: string): Promise<UserBehaviorPattern[]> {
+        return this.openCogService.getUserBehaviorPatterns(userId);
+    }
+
+    async predictUserAction(userId: string, context: any): Promise<{ action: string; confidence: number }[]> {
+        return this.openCogService.predictUserAction(userId, context);
+    }
+
+    // Learning model management
+    async createLearningModel(type: string, parameters?: Record<string, any>): Promise<LearningModel> {
+        return this.openCogService.createLearningModel(type, parameters);
+    }
+
+    async updateLearningModel(modelId: string, trainingData: LearningData[]): Promise<LearningModel> {
+        return this.openCogService.updateLearningModel(modelId, trainingData);
+    }
+
+    async getLearningModel(modelId: string): Promise<LearningModel | undefined> {
+        return this.openCogService.getLearningModel(modelId);
+    }
+
+    async listLearningModels(): Promise<LearningModel[]> {
+        return this.openCogService.listLearningModels();
+    }
+
+    // Personalization
+    async personalize(userId: string, preferences: Record<string, any>): Promise<void> {
+        return this.openCogService.personalize(userId, preferences);
+    }
+
+    async getPersonalization(userId: string): Promise<Record<string, any>> {
+        return this.openCogService.getPersonalization(userId);
+    }
+
+    // Learning analytics
+    async getLearningStats(): Promise<{
+        totalLearningRecords: number;
+        modelAccuracy: Record<string, number>;
+        userAdaptations: number;
+        behaviorPatterns: number;
+    }> {
+        return this.openCogService.getLearningStats();
     }
 }

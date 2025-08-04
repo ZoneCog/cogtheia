@@ -21,13 +21,19 @@ import {
     ReasoningResult,
     LearningData,
     PatternInput,
-    PatternResult
+    PatternResult,
+    LearningModel,
+    AdaptationStrategy,
+    UserBehaviorPattern,
+    LearningContext
 } from './opencog-types';
+import { KnowledgeManagementService } from './knowledge-management-service';
 
 export const OPENCOG_SERVICE_PATH = '/services/opencog';
 
 /**
  * Core OpenCog service interface for Theia integration
+ * Enhanced with knowledge management capabilities
  */
 export interface OpenCogService {
     /**
@@ -49,6 +55,44 @@ export interface OpenCogService {
     learn(data: LearningData): Promise<void>;
 
     /**
+     * Advanced learning and adaptation methods
+     */
+    learnFromFeedback(feedback: UserFeedback, context: LearningContext): Promise<void>;
+    adaptToUser(userId: string, domain: string, data: any): Promise<AdaptationStrategy>;
+    getAdaptationStrategy(userId: string, domain: string): Promise<AdaptationStrategy | undefined>;
+    
+    /**
+     * Behavioral learning
+     */
+    learnUserBehavior(userId: string, action: string, context: any): Promise<void>;
+    getUserBehaviorPatterns(userId: string): Promise<UserBehaviorPattern[]>;
+    predictUserAction(userId: string, context: any): Promise<{ action: string; confidence: number }[]>;
+    
+    /**
+     * Learning model management
+     */
+    createLearningModel(type: string, parameters?: Record<string, any>): Promise<LearningModel>;
+    updateLearningModel(modelId: string, trainingData: LearningData[]): Promise<LearningModel>;
+    getLearningModel(modelId: string): Promise<LearningModel | undefined>;
+    listLearningModels(): Promise<LearningModel[]>;
+    
+    /**
+     * Personalization
+     */
+    personalize(userId: string, preferences: Record<string, any>): Promise<void>;
+    getPersonalization(userId: string): Promise<Record<string, any>>;
+    
+    /**
+     * Learning analytics
+     */
+    getLearningStats(): Promise<{
+        totalLearningRecords: number;
+        modelAccuracy: Record<string, number>;
+        userAdaptations: number;
+        behaviorPatterns: number;
+    }>;
+
+    /**
      * Pattern recognition
      */
     recognizePatterns(input: PatternInput): Promise<PatternResult[]>;
@@ -60,6 +104,11 @@ export interface OpenCogService {
     clearAtomSpace(): Promise<void>;
     exportAtomSpace(): Promise<string>;
     importAtomSpace(data: string): Promise<void>;
+
+    /**
+     * Knowledge Management Service integration
+     */
+    getKnowledgeManagementService(): KnowledgeManagementService;
 }
 
 export const OpenCogService = Symbol('OpenCogService');

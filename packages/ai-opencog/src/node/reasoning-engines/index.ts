@@ -14,8 +14,6 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-export * from './opencog-types';
-export * from './opencog-service';
-export * from './protocol';
-export * from './knowledge-management-types';
-export * from './knowledge-management-service';
+export { PLNReasoningEngine } from './pln-reasoning-engine';
+export { PatternMatchingEngine } from './pattern-matching-engine';
+export { CodeAnalysisReasoningEngine } from './code-analysis-reasoning-engine';
