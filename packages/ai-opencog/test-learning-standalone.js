@@ -3,6 +3,7 @@
  * This tests the core learning algorithms without Theia dependencies
  */
 
+const crypto = require('crypto');
 // Simplified AtomSpace service for testing core learning logic
 class TestAtomSpaceService {
     constructor() {
@@ -195,7 +196,9 @@ class TestAtomSpaceService {
 
     // Helper methods
     generateSessionId() {
-        return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        // Use cryptographically secure random bytes for session ID
+        const randomPart = crypto.randomBytes(12).toString('hex');
+        return `session_${Date.now()}_${randomPart}`;
     }
 
     determinePriority(feedback) {
