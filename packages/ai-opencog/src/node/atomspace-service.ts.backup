@@ -166,6 +166,7 @@ export class AtomSpaceService implements OpenCogService {
         }
         
         await this.addAtom(learningAtom);
+//=======
         try {
             // Enhanced learning implementation with cognitive capabilities
             const learningAtom: Atom = {
@@ -708,6 +709,7 @@ export class AtomSpaceService implements OpenCogService {
         };
     }
 
+//<<<<<<< copilot/fix-16
     /**
      * Detect general patterns in input data
      */
@@ -1158,8 +1160,8 @@ export class AtomSpaceService implements OpenCogService {
         const standardDeviation = Math.sqrt(variance);
         
         return mean > 0 ? Math.max(0, 1 - standardDeviation / mean) : 0;
-    }
-    
+//=======
+//<<<<<<< copilot/fix-17
     // Enhanced learning helper methods
 
     private generateSessionId(): string {
@@ -1433,4 +1435,5 @@ export class AtomSpaceService implements OpenCogService {
     getKnowledgeManagementService(): KnowledgeManagementService {
         return this.knowledgeManagementService;
     }
+}
 }
