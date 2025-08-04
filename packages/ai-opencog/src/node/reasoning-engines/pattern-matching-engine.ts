@@ -802,8 +802,11 @@ export class PatternMatchingEngine {
         return structure.childCount || 0;
     }
 
-    private calculateHierarchicalComplexity(structure: any): number {
-        return structure.depth * structure.childCount;
+    private calculateHierarchicalComplexity(structure: any): 'simple' | 'moderate' | 'complex' {
+        const complexityScore = structure.depth * structure.childCount;
+        if (complexityScore < 5) return 'simple';
+        if (complexityScore < 15) return 'moderate';
+        return 'complex';
     }
 
     private calculateSemanticCoherence(cluster: Atom[]): number {

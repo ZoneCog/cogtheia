@@ -115,7 +115,7 @@ export interface KnowledgeManagementService {
     /**
      * Categorize atoms automatically based on rules
      */
-    categorizeAtoms(graphId: string): Promise<Map<string, string[]>>; // atomId -> categoryIds
+    categorizeAtoms(graphId: string): Promise<Record<string, string[]>>; // atomId -> categoryIds
     
     /**
      * Get atoms by category
@@ -201,4 +201,4 @@ export interface KnowledgeManagementService {
     executeKnowledgeQuery(query: any): Promise<any>;
 }
 
-export const KnowledgeManagementService = Symbol('KnowledgeManagementService');
+export const KnowledgeManagementService = 'KnowledgeManagementService';

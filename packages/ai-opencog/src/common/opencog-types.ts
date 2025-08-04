@@ -195,7 +195,9 @@ export type PatternType =
     | 'repetition'
     | 'hierarchical'
     | 'interaction-rhythm'
-    | 'usage-profile';
+    | 'usage-profile'
+    | 'sequential'
+    | 'semantic';
 
 /**
  * Pattern recognition result

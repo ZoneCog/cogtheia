@@ -25,7 +25,8 @@ import {
     LearningModel,
     AdaptationStrategy,
     UserBehaviorPattern,
-    LearningContext
+    LearningContext,
+    UserFeedback
 } from './opencog-types';
 import { KnowledgeManagementService } from './knowledge-management-service';
 
@@ -111,4 +112,4 @@ export interface OpenCogService {
     getKnowledgeManagementService(): KnowledgeManagementService;
 }
 
-export const OpenCogService = Symbol('OpenCogService');
+export const OpenCogService = 'OpenCogService';
