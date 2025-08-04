@@ -20,14 +20,17 @@ import { AgentService } from '@theia/ai-core/lib/common/agent-service';
 import { OpenCogService, OPENCOG_SERVICE_PATH } from '../common';
 import { FrontendOpenCogService } from './frontend-opencog-service';
 import { CodeAnalysisAgent } from './code-analysis-agent';
+import { LearningAdaptationAgent } from './learning-adaptation-agent';
 
 export default new ContainerModule(bind => {
     // Bind the frontend OpenCog service
     bind(OpenCogService).to(FrontendOpenCogService).inSingletonScope();
     
-    // Bind the code analysis agent
+    // Bind the agents
     bind(CodeAnalysisAgent).toSelf().inSingletonScope();
+    bind(LearningAdaptationAgent).toSelf().inSingletonScope();
     
-    // Register the agent with the agent service
+    // Register the agents with the agent service
     bind(Symbol.for('Agent')).to(CodeAnalysisAgent).inSingletonScope();
+    bind(Symbol.for('Agent')).to(LearningAdaptationAgent).inSingletonScope();
 });

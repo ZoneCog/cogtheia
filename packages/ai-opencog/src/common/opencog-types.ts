@@ -79,12 +79,27 @@ export interface ReasoningResult {
  * Learning data input
  */
 export interface LearningData {
-    type: 'supervised' | 'unsupervised' | 'reinforcement' | 'personalization';
+    type: 'supervised' | 'unsupervised' | 'reinforcement' | 'personalization' | 'behavioral' | 'adaptive';
     input: any;
     expectedOutput?: any;
     feedback?: UserFeedback;
-    context?: any;
+    context?: LearningContext;
     timestamp?: number;
+    priority?: 'low' | 'medium' | 'high' | 'critical';
+    sessionId?: string;
+}
+
+/**
+ * Learning context for better adaptation
+ */
+export interface LearningContext {
+    userId?: string;
+    workspaceId?: string;
+    projectType?: string;
+    currentTask?: string;
+    userExperience?: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+    preferences?: Record<string, any>;
+    environmentInfo?: Record<string, any>;
 }
 
 /**
@@ -95,6 +110,49 @@ export interface UserFeedback {
     helpful: boolean;
     comment?: string;
     actionTaken?: string;
+    timeSpent?: number; // Time spent with suggestion in seconds
+    outcome?: 'accepted' | 'rejected' | 'modified' | 'ignored';
+}
+
+/**
+ * Learning model for storing learned patterns
+ */
+export interface LearningModel {
+    id: string;
+    type: string;
+    version: number;
+    accuracy?: number;
+    confidence?: number;
+    trainingData?: LearningData[];
+    parameters?: Record<string, any>;
+    createdAt: number;
+    updatedAt: number;
+}
+
+/**
+ * Adaptation strategy for personalization
+ */
+export interface AdaptationStrategy {
+    id: string;
+    userId: string;
+    domain: string; // e.g., 'code_completion', 'debugging', 'navigation'
+    strategy: Record<string, any>;
+    effectiveness: number; // 0-1 scale
+    lastUpdated: number;
+}
+
+/**
+ * User behavior pattern
+ */
+export interface UserBehaviorPattern {
+    id: string;
+    userId: string;
+    pattern: string;
+    frequency: number;
+    context: Record<string, any>;
+    confidence: number;
+    discovered: number;
+    lastSeen: number;
 }
 
 /**
