@@ -16,15 +16,28 @@
 
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { ConnectionHandler, RpcConnectionHandler } from '@theia/core/lib/common/messaging';
-import { OpenCogService, OPENCOG_SERVICE_PATH } from '../common';
+import { 
+    OpenCogService, 
+    OPENCOG_SERVICE_PATH,
+    KnowledgeManagementService,
+    KNOWLEDGE_MANAGEMENT_SERVICE_PATH
+} from '../common';
 import { AtomSpaceService } from './atomspace-service';
+import { KnowledgeManagementServiceImpl } from './knowledge-management-service-impl';
 
 export default new ContainerModule(bind => {
     bind(OpenCogService).to(AtomSpaceService).inSingletonScope();
+    bind(KnowledgeManagementService).to(KnowledgeManagementServiceImpl).inSingletonScope();
     
     bind(ConnectionHandler).toDynamicValue(ctx =>
         new RpcConnectionHandler(OPENCOG_SERVICE_PATH, () =>
             ctx.container.get(OpenCogService)
+        )
+    ).inSingletonScope();
+
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(KNOWLEDGE_MANAGEMENT_SERVICE_PATH, () =>
+            ctx.container.get(KnowledgeManagementService)
         )
     ).inSingletonScope();
 });

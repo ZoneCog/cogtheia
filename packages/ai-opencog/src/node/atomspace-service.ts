@@ -23,18 +23,33 @@ import {
     LearningData,
     PatternInput,
     PatternResult,
-    OpenCogService
+    OpenCogService,
+    KnowledgeManagementService
 } from '../common';
+//<<<<<<< copilot/fix-18
+import { KnowledgeManagementServiceImpl } from './knowledge-management-service-impl';
+
+/**
+ * AtomSpace implementation for storing and managing OpenCog atoms
+ * Enhanced with knowledge management capabilities
+//=======
 import { PLNReasoningEngine, PatternMatchingEngine, CodeAnalysisReasoningEngine } from './reasoning-engines';
 
 /**
  * Enhanced AtomSpace implementation with advanced reasoning engines
  * Integrates PLN, pattern matching, and specialized code analysis
+//>>>>>>> master
  */
 @injectable()
 export class AtomSpaceService implements OpenCogService {
     private atoms: Map<string, Atom> = new Map();
     private nextAtomId = 1;
+//<<<<<<< copilot/fix-18
+    private knowledgeManagementService: KnowledgeManagementService;
+
+    constructor() {
+        this.knowledgeManagementService = new KnowledgeManagementServiceImpl();
+//=======
     
     // Advanced reasoning engines
     private plnEngine: PLNReasoningEngine;
@@ -45,6 +60,7 @@ export class AtomSpaceService implements OpenCogService {
         this.plnEngine = new PLNReasoningEngine();
         this.patternEngine = new PatternMatchingEngine();
         this.codeAnalysisEngine = new CodeAnalysisReasoningEngine();
+//>>>>>>> master
     }
 
     async addAtom(atom: Atom): Promise<string> {
@@ -453,5 +469,9 @@ export class AtomSpaceService implements OpenCogService {
             dominantConcepts: concepts.slice(0, 5),
             conceptCount: concepts.length
         };
+    }
+
+    getKnowledgeManagementService(): KnowledgeManagementService {
+        return this.knowledgeManagementService;
     }
 }

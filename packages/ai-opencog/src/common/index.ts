@@ -17,3 +17,5 @@
 export * from './opencog-types';
 export * from './opencog-service';
 export * from './protocol';
+export * from './knowledge-management-types';
+export * from './knowledge-management-service';

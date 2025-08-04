@@ -17,13 +17,22 @@
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { WebSocketConnectionProvider } from '@theia/core/lib/browser/messaging';
 import { AgentService } from '@theia/ai-core/lib/common/agent-service';
-import { OpenCogService, OPENCOG_SERVICE_PATH } from '../common';
+import { 
+    OpenCogService, 
+    OPENCOG_SERVICE_PATH,
+    KnowledgeManagementService,
+    KNOWLEDGE_MANAGEMENT_SERVICE_PATH
+} from '../common';
 import { FrontendOpenCogService } from './frontend-opencog-service';
+import { FrontendKnowledgeManagementService } from './frontend-knowledge-management-service';
 import { CodeAnalysisAgent } from './code-analysis-agent';
 
 export default new ContainerModule(bind => {
     // Bind the frontend OpenCog service
     bind(OpenCogService).to(FrontendOpenCogService).inSingletonScope();
+    
+    // Bind the frontend Knowledge Management service
+    bind(KnowledgeManagementService).to(FrontendKnowledgeManagementService).inSingletonScope();
     
     // Bind the code analysis agent
     bind(CodeAnalysisAgent).toSelf().inSingletonScope();
