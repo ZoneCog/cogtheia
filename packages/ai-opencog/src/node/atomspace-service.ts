@@ -29,12 +29,23 @@ import {
     PatternInput,
     PatternResult,
     OpenCogService,
+//<<<<<<< copilot/fix-17
     LearningModel,
     AdaptationStrategy,
     UserBehaviorPattern,
     LearningContext,
     UserFeedback
+//=======
+    KnowledgeManagementService
+//>>>>>>> master
 } from '../common';
+//<<<<<<< copilot/fix-18
+import { KnowledgeManagementServiceImpl } from './knowledge-management-service-impl';
+
+/**
+ * AtomSpace implementation for storing and managing OpenCog atoms
+ * Enhanced with knowledge management capabilities
+//=======
 import { PLNReasoningEngine, PatternMatchingEngine, CodeAnalysisReasoningEngine } from './reasoning-engines';
 
 /**
@@ -50,6 +61,12 @@ import { PLNReasoningEngine, PatternMatchingEngine, CodeAnalysisReasoningEngine 
 export class AtomSpaceService implements OpenCogService {
     private atoms: Map<string, Atom> = new Map();
     private nextAtomId = 1;
+//<<<<<<< copilot/fix-18
+    private knowledgeManagementService: KnowledgeManagementService;
+
+    constructor() {
+        this.knowledgeManagementService = new KnowledgeManagementServiceImpl();
+//=======
     
 //<<<<<<< copilot/fix-17
     // Learning and adaptation storage
@@ -69,6 +86,7 @@ export class AtomSpaceService implements OpenCogService {
         this.plnEngine = new PLNReasoningEngine();
         this.patternEngine = new PatternMatchingEngine();
         this.codeAnalysisEngine = new CodeAnalysisReasoningEngine();
+//>>>>>>> master
     }
 //>>>>>>> master
 
@@ -717,6 +735,7 @@ export class AtomSpaceService implements OpenCogService {
         };
     }
 
+//<<<<<<< copilot/fix-17
     // Enhanced learning helper methods
 
     private generateSessionId(): string {
@@ -985,5 +1004,9 @@ export class AtomSpaceService implements OpenCogService {
         }
         
         return areas;
+//=======
+    getKnowledgeManagementService(): KnowledgeManagementService {
+        return this.knowledgeManagementService;
+//>>>>>>> master
     }
 }

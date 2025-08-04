@@ -27,11 +27,13 @@ import {
     UserBehaviorPattern,
     LearningContext
 } from './opencog-types';
+import { KnowledgeManagementService } from './knowledge-management-service';
 
 export const OPENCOG_SERVICE_PATH = '/services/opencog';
 
 /**
  * Core OpenCog service interface for Theia integration
+ * Enhanced with knowledge management capabilities
  */
 export interface OpenCogService {
     /**
@@ -102,6 +104,11 @@ export interface OpenCogService {
     clearAtomSpace(): Promise<void>;
     exportAtomSpace(): Promise<string>;
     importAtomSpace(data: string): Promise<void>;
+
+    /**
+     * Knowledge Management Service integration
+     */
+    getKnowledgeManagementService(): KnowledgeManagementService;
 }
 
 export const OpenCogService = Symbol('OpenCogService');
