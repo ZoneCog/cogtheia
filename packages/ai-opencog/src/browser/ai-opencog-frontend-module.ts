@@ -23,6 +23,12 @@ import { FrontendOpenCogService } from './frontend-opencog-service';
 import { FrontendKnowledgeManagementService } from './frontend-knowledge-management-service';
 import { CodeAnalysisAgent } from './code-analysis-agent';
 import { LearningAdaptationAgent } from './learning-adaptation-agent';
+// Phase 2 cognitive services
+import { PatternRecognitionAgent } from './pattern-recognition-agent';
+import { LearningAgent } from './enhanced-learning-agent';
+import { SemanticCompletionProvider } from './semantic-completion';
+import { IntelligentRefactoringProvider } from './intelligent-refactoring';
+import { RealTimeCodeAnalyzer } from './real-time-analyzer';
 
 export default new ContainerModule(bind => {
     // Bind the frontend OpenCog service
@@ -31,11 +37,20 @@ export default new ContainerModule(bind => {
     // Bind the frontend Knowledge Management service
     bind(KnowledgeManagementService).to(FrontendKnowledgeManagementService).inSingletonScope();
     
-    // Bind the agents
+    // Bind the existing agents
     bind(CodeAnalysisAgent).toSelf().inSingletonScope();
     bind(LearningAdaptationAgent).toSelf().inSingletonScope();
+    
+    // Bind Phase 2 cognitive services
+    bind(PatternRecognitionAgent).toSelf().inSingletonScope();
+    bind(LearningAgent).toSelf().inSingletonScope();
+    bind(SemanticCompletionProvider).toSelf().inSingletonScope();
+    bind(IntelligentRefactoringProvider).toSelf().inSingletonScope();
+    bind(RealTimeCodeAnalyzer).toSelf().inSingletonScope();
     
     // Register the agents with the agent service
     bind(Symbol.for('Agent')).to(CodeAnalysisAgent).inSingletonScope();
     bind(Symbol.for('Agent')).to(LearningAdaptationAgent).inSingletonScope();
+    bind(Symbol.for('Agent')).to(PatternRecognitionAgent).inSingletonScope();
+    bind(Symbol.for('Agent')).to(LearningAgent).inSingletonScope();
 });
