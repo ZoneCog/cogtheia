@@ -18,14 +18,9 @@ import { injectable, inject } from '@theia/core/shared/inversify';
 import { Agent } from '@theia/ai-core/lib/common/agent';
 import { AgentService } from '@theia/ai-core/lib/common/agent-service';
 import { WorkspaceService } from '@theia/workspace/lib/browser';
-//<<<<<<< copilot/fix-16
-import { OpenCogService } from '../common';
-import { Atom, ReasoningQuery, PatternInput, PatternResult } from '../common/opencog-types';
-//=======
 import { OpenCogService, KnowledgeManagementService } from '../common';
-import { Atom, ReasoningQuery } from '../common/opencog-types';
+import { Atom, ReasoningQuery, PatternInput, PatternResult } from '../common/opencog-types';
 import { KnowledgeGraph, KnowledgeDiscoveryQuery } from '../common/knowledge-management-types';
-//>>>>>>> master
 
 /**
  * OpenCog-powered code analysis agent that extends Theia's AI agent system
@@ -168,15 +163,11 @@ export class CodeAnalysisAgent extends Agent {
             return {
                 fileUri,
                 analysis: result,
-//<<<<<<< copilot/fix-16
                 patterns: patterns,
                 recommendations: this.generatePatternBasedRecommendations(patterns, result),
                 qualityMetrics: this.calculateCodeQualityMetrics(patterns),
-//=======
                 relatedKnowledge: discoveredKnowledge,
-                recommendations,
                 knowledgeMetrics: await this.getCodeKnowledgeMetrics(),
-//>>>>>>> master
                 timestamp: Date.now()
             };
             
@@ -332,12 +323,8 @@ class Calculator {
 const result = calculateSum(5, 3);`;
     }
 
-//<<<<<<< copilot/fix-16
-    private async extractCodeAtomsFromPatterns(patterns: PatternResult[], content: string, fileUri: string): Promise<Atom[]> {
-//=======
     private async extractCodeAtoms(content: string, fileUri: string): Promise<Atom[]> {
         // Enhanced code atom extraction with more patterns
-//>>>>>>> master
         const atoms: Atom[] = [];
         
         // Create a file atom
@@ -348,43 +335,6 @@ const result = calculateSum(5, 3);`;
             outgoing: []
         });
         
-//<<<<<<< copilot/fix-16
-        // Create atoms based on recognized patterns
-        for (const pattern of patterns) {
-            if (pattern.metadata?.patternType === 'code') {
-                // Create specific atoms for code patterns
-                const patternAtom: Atom = {
-                    type: 'PatternNode',
-                    name: `${pattern.pattern.name}_${fileUri}`,
-                    truthValue: { 
-                        strength: pattern.confidence, 
-                        confidence: Math.min(pattern.confidence + 0.1, 1.0)
-                    },
-                    outgoing: [],
-                    metadata: {
-                        patternType: pattern.pattern.type,
-                        instances: pattern.instances.length,
-                        complexity: pattern.metadata.complexity
-                    }
-                };
-                atoms.push(patternAtom);
-                
-                // Create atoms for each instance
-                for (let i = 0; i < Math.min(pattern.instances.length, 5); i++) {
-                    const instance = pattern.instances[i];
-                    atoms.push({
-                        type: 'InstanceNode',
-                        name: `${pattern.pattern.name}_instance_${i}`,
-                        truthValue: { strength: 0.8, confidence: 0.7 },
-                        outgoing: [patternAtom],
-                        metadata: {
-                            text: instance.text,
-                            index: instance.index
-                        }
-                    });
-                }
-            }
-//=======
         // Extract functions
         const functionMatches = content.match(/function\s+(\w+)/g) || [];
         for (const match of functionMatches) {
@@ -395,7 +345,6 @@ const result = calculateSum(5, 3);`;
                 truthValue: { strength: 0.9, confidence: 0.8 },
                 outgoing: []
             });
-//>>>>>>> master
         }
         
         // Extract classes
