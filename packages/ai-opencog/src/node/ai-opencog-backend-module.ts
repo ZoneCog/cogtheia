@@ -24,10 +24,16 @@ import {
 } from '../common';
 import { AtomSpaceService } from './atomspace-service';
 import { KnowledgeManagementServiceImpl } from './knowledge-management-service-impl';
+// Phase 2 backend components
+import { CodeAnalysisAgent } from './code-analysis-agent';
 
 export default new ContainerModule(bind => {
     bind(OpenCogService).to(AtomSpaceService).inSingletonScope();
     bind(KnowledgeManagementService).to(KnowledgeManagementServiceImpl).inSingletonScope();
+    
+    // Phase 2: Bind node-based code analysis agent
+    bind(CodeAnalysisAgent).toSelf().inSingletonScope();
+    bind(Symbol.for('Agent')).to(CodeAnalysisAgent).inSingletonScope();
     
     bind(ConnectionHandler).toDynamicValue(ctx =>
         new RpcConnectionHandler(OPENCOG_SERVICE_PATH, () =>
