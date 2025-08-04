@@ -29,6 +29,7 @@ import { LearningAgent } from './enhanced-learning-agent';
 import { SemanticCompletionProvider } from './semantic-completion';
 import { IntelligentRefactoringProvider } from './intelligent-refactoring';
 import { RealTimeCodeAnalyzer } from './real-time-analyzer';
+import { CognitiveEditorIntegration } from './cognitive-editor-integration';
 
 export default new ContainerModule(bind => {
     // Bind the frontend OpenCog service
@@ -47,6 +48,9 @@ export default new ContainerModule(bind => {
     bind(SemanticCompletionProvider).toSelf().inSingletonScope();
     bind(IntelligentRefactoringProvider).toSelf().inSingletonScope();
     bind(RealTimeCodeAnalyzer).toSelf().inSingletonScope();
+    
+    // Bind editor integration
+    bind(CognitiveEditorIntegration).toSelf().inSingletonScope();
     
     // Register the agents with the agent service
     bind(Symbol.for('Agent')).to(CodeAnalysisAgent).inSingletonScope();
