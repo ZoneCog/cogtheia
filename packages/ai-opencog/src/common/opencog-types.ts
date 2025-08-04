@@ -25,6 +25,7 @@ export interface Atom {
     attentionValue?: AttentionValue;
     incoming?: Atom[];
     outgoing?: Atom[];
+    metadata?: Record<string, any>;
 }
 
 /**
