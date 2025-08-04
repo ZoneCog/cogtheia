@@ -15,6 +15,7 @@
 // *****************************************************************************
 
 import { injectable } from '@theia/core/shared/inversify';
+import * as crypto from 'crypto';
 import {
     Atom,
     AtomPattern,
@@ -445,7 +446,9 @@ export class AtomSpaceService implements OpenCogService {
     // Enhanced learning helper methods
 
     private generateSessionId(): string {
-        return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        // Use cryptographically secure random bytes for session ID
+        const randomPart = crypto.randomBytes(12).toString('hex');
+        return `session_${Date.now()}_${randomPart}`;
     }
 
     private determinePriority(feedback: UserFeedback): 'low' | 'medium' | 'high' | 'critical' {
