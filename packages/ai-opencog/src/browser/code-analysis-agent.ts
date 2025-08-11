@@ -450,6 +450,238 @@ const result = calculateSum(5, 3);`;
         };
     }
 
+    private async extractCodeAtomsFromPatterns(patterns: PatternResult[], content: string, fileUri: string): Promise<Atom[]> {
+        const atoms: Atom[] = [];
+        
+        // Create a file atom
+        atoms.push({
+            type: 'FileNode',
+            name: fileUri,
+            truthValue: { strength: 1.0, confidence: 1.0 },
+            outgoing: [],
+            metadata: { fileSize: content.length, language: this.detectLanguage(fileUri) }
+        });
+        
+        // Process each discovered pattern to create cognitive atoms
+        for (const patternResult of patterns) {
+            const pattern = patternResult.pattern;
+            const confidence = patternResult.confidence;
+            
+            // Create atoms based on pattern types
+            switch (pattern.type) {
+                case 'code':
+                    atoms.push(...await this.createCodePatternAtoms(pattern, confidence, fileUri));
+                    break;
+                case 'design-pattern':
+                    atoms.push(...await this.createDesignPatternAtoms(pattern, confidence, fileUri));
+                    break;
+                case 'async-pattern':
+                    atoms.push(...await this.createAsyncPatternAtoms(pattern, confidence, fileUri));
+                    break;
+                case 'reactive-pattern':
+                    atoms.push(...await this.createReactivePatternAtoms(pattern, confidence, fileUri));
+                    break;
+                default:
+                    // Generic pattern atom
+                    atoms.push({
+                        type: 'PatternNode',
+                        name: `${pattern.name}_${fileUri}`,
+                        truthValue: { strength: confidence, confidence: confidence },
+                        outgoing: [],
+                        metadata: { 
+                            patternType: pattern.type,
+                            patternName: pattern.name,
+                            sourceFile: fileUri 
+                        }
+                    });
+            }
+        }
+        
+        // Fallback to basic extraction if no patterns found
+        if (patterns.length === 0) {
+            atoms.push(...await this.extractCodeAtoms(content, fileUri));
+        }
+        
+        return atoms;
+    }
+    
+    private async createCodePatternAtoms(pattern: any, confidence: number, fileUri: string): Promise<Atom[]> {
+        const atoms: Atom[] = [];
+        
+        // Function patterns
+        if (pattern.name === 'function-declaration' || pattern.name === 'arrow-function') {
+            atoms.push({
+                type: 'FunctionNode',
+                name: pattern.metadata?.functionName || `function_${Date.now()}`,
+                truthValue: { strength: 0.9, confidence },
+                outgoing: [],
+                metadata: {
+                    functionType: pattern.name,
+                    parameters: pattern.metadata?.parameters || [],
+                    returnType: pattern.metadata?.returnType,
+                    sourceFile: fileUri,
+                    complexity: pattern.metadata?.complexity
+                }
+            });
+        }
+        
+        // Class patterns
+        if (pattern.name === 'class-declaration') {
+            atoms.push({
+                type: 'ClassNode',
+                name: pattern.metadata?.className || `class_${Date.now()}`,
+                truthValue: { strength: 0.95, confidence },
+                outgoing: [],
+                metadata: {
+                    extends: pattern.metadata?.extends,
+                    implements: pattern.metadata?.implements,
+                    methods: pattern.metadata?.methods || [],
+                    properties: pattern.metadata?.properties || [],
+                    sourceFile: fileUri
+                }
+            });
+        }
+        
+        // Variable/constant patterns
+        if (pattern.name === 'variable-declaration') {
+            atoms.push({
+                type: 'VariableNode',
+                name: pattern.metadata?.variableName || `variable_${Date.now()}`,
+                truthValue: { strength: 0.7, confidence },
+                outgoing: [],
+                metadata: {
+                    declarationType: pattern.metadata?.declarationType,
+                    dataType: pattern.metadata?.dataType,
+                    isConstant: pattern.metadata?.isConstant,
+                    sourceFile: fileUri
+                }
+            });
+        }
+        
+        return atoms;
+    }
+    
+    private async createDesignPatternAtoms(pattern: any, confidence: number, fileUri: string): Promise<Atom[]> {
+        const atoms: Atom[] = [];
+        
+        atoms.push({
+            type: 'DesignPatternNode',
+            name: `${pattern.name}_${fileUri}`,
+            truthValue: { strength: 0.8, confidence },
+            outgoing: [],
+            metadata: {
+                patternName: pattern.name,
+                category: pattern.metadata?.category || 'unknown',
+                participants: pattern.metadata?.participants || [],
+                intent: pattern.metadata?.intent,
+                sourceFile: fileUri,
+                location: pattern.metadata?.location
+            }
+        });
+        
+        // Create relationship atoms for pattern participants
+        if (pattern.metadata?.participants) {
+            for (const participant of pattern.metadata.participants) {
+                atoms.push({
+                    type: 'ParticipantNode',
+                    name: `${participant}_${fileUri}`,
+                    truthValue: { strength: 0.7, confidence },
+                    outgoing: [],
+                    metadata: {
+                        role: participant,
+                        designPattern: pattern.name,
+                        sourceFile: fileUri
+                    }
+                });
+            }
+        }
+        
+        return atoms;
+    }
+    
+    private async createAsyncPatternAtoms(pattern: any, confidence: number, fileUri: string): Promise<Atom[]> {
+        const atoms: Atom[] = [];
+        
+        atoms.push({
+            type: 'AsyncPatternNode',
+            name: `${pattern.name}_${fileUri}`,
+            truthValue: { strength: 0.85, confidence },
+            outgoing: [],
+            metadata: {
+                asyncType: pattern.name,
+                errorHandling: pattern.metadata?.errorHandling || false,
+                chainLength: pattern.metadata?.chainLength || 1,
+                complexity: pattern.metadata?.complexity || 'simple',
+                sourceFile: fileUri
+            }
+        });
+        
+        // Create specific atoms for promise chains vs async/await
+        if (pattern.name === 'promise-chain') {
+            atoms.push({
+                type: 'PromiseChainNode',
+                name: `promise_chain_${Date.now()}`,
+                truthValue: { strength: 0.8, confidence },
+                outgoing: [],
+                metadata: {
+                    chainLength: pattern.metadata?.chainLength || 1,
+                    hasCatch: pattern.metadata?.hasCatch || false,
+                    hasFinally: pattern.metadata?.hasFinally || false,
+                    sourceFile: fileUri
+                }
+            });
+        } else if (pattern.name === 'async-await') {
+            atoms.push({
+                type: 'AsyncAwaitNode',
+                name: `async_await_${Date.now()}`,
+                truthValue: { strength: 0.9, confidence },
+                outgoing: [],
+                metadata: {
+                    hasErrorHandling: pattern.metadata?.hasErrorHandling || false,
+                    awaitCount: pattern.metadata?.awaitCount || 1,
+                    sourceFile: fileUri
+                }
+            });
+        }
+        
+        return atoms;
+    }
+    
+    private async createReactivePatternAtoms(pattern: any, confidence: number, fileUri: string): Promise<Atom[]> {
+        const atoms: Atom[] = [];
+        
+        atoms.push({
+            type: 'ReactivePatternNode',
+            name: `${pattern.name}_${fileUri}`,
+            truthValue: { strength: 0.8, confidence },
+            outgoing: [],
+            metadata: {
+                reactiveType: pattern.name,
+                streamOperators: pattern.metadata?.streamOperators || [],
+                backpressureHandling: pattern.metadata?.backpressureHandling || false,
+                sourceFile: fileUri
+            }
+        });
+        
+        // Create observer pattern atoms if detected
+        if (pattern.name === 'observer-pattern') {
+            atoms.push({
+                type: 'ObserverNode',
+                name: `observer_${Date.now()}`,
+                truthValue: { strength: 0.85, confidence },
+                outgoing: [],
+                metadata: {
+                    subjectCount: pattern.metadata?.subjectCount || 1,
+                    observerCount: pattern.metadata?.observerCount || 1,
+                    notificationTypes: pattern.metadata?.notificationTypes || [],
+                    sourceFile: fileUri
+                }
+            });
+        }
+        
+        return atoms;
+    }
+
     private detectLanguage(fileUri: string): string {
         const extension = fileUri.split('.').pop()?.toLowerCase();
         const languageMap: Record<string, string> = {
