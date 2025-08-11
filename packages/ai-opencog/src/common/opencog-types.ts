@@ -162,7 +162,7 @@ export interface UserBehaviorPattern {
 export interface PatternInput {
     data: any;
     context?: any;
-    scope?: 'local' | 'global' | 'project';
+    scope?: 'local' | 'global' | 'project' | 'file' | 'session';
     options?: PatternRecognitionOptions;
 }
 
@@ -197,7 +197,15 @@ export type PatternType =
     | 'interaction-rhythm'
     | 'usage-profile'
     | 'sequential'
-    | 'semantic';
+    | 'semantic'
+    // Phase 2 pattern types
+    | 'anti-pattern'
+    | 'code-smell'
+    | 'workflow-pattern'
+    | 'usage-pattern'
+    | 'growth-pattern'
+    | 'refactoring-pattern'
+    | 'maintenance-pattern';
 
 /**
  * Pattern recognition result
