@@ -30,6 +30,10 @@ import { SemanticCompletionProvider } from './semantic-completion';
 import { IntelligentRefactoringProvider } from './intelligent-refactoring';
 import { RealTimeCodeAnalyzer } from './real-time-analyzer';
 import { CognitiveEditorIntegration } from './cognitive-editor-integration';
+// Phase 3 AI Agent Enhancement - Cognitive Code Analysis Agents
+import { ComprehensiveCodeAnalysisAgent } from './comprehensive-code-analysis-agent';
+import { IntelligentAssistanceAgent } from './intelligent-assistance-agent';
+import { AdvancedReasoningAgent } from './advanced-reasoning-agent';
 
 export default new ContainerModule(bind => {
     // Bind the frontend OpenCog service
@@ -49,6 +53,11 @@ export default new ContainerModule(bind => {
     bind(IntelligentRefactoringProvider).toSelf().inSingletonScope();
     bind(RealTimeCodeAnalyzer).toSelf().inSingletonScope();
     
+    // Bind Phase 3 AI Agent Enhancement - Cognitive Code Analysis Agents
+    bind(ComprehensiveCodeAnalysisAgent).toSelf().inSingletonScope();
+    bind(IntelligentAssistanceAgent).toSelf().inSingletonScope();
+    bind(AdvancedReasoningAgent).toSelf().inSingletonScope();
+    
     // Bind editor integration
     bind(CognitiveEditorIntegration).toSelf().inSingletonScope();
     
@@ -57,4 +66,9 @@ export default new ContainerModule(bind => {
     bind(Symbol.for('Agent')).to(LearningAdaptationAgent).inSingletonScope();
     bind(Symbol.for('Agent')).to(PatternRecognitionAgent).inSingletonScope();
     bind(Symbol.for('Agent')).to(LearningAgent).inSingletonScope();
+    
+    // Register Phase 3 agents with the agent service
+    bind(Symbol.for('Agent')).to(ComprehensiveCodeAnalysisAgent).inSingletonScope();
+    bind(Symbol.for('Agent')).to(IntelligentAssistanceAgent).inSingletonScope();
+    bind(Symbol.for('Agent')).to(AdvancedReasoningAgent).inSingletonScope();
 });
