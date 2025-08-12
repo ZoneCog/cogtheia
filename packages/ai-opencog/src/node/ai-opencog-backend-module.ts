@@ -20,12 +20,34 @@ import {
     OpenCogService, 
     OPENCOG_SERVICE_PATH,
     KnowledgeManagementService,
-    KNOWLEDGE_MANAGEMENT_SERVICE_PATH
+    KNOWLEDGE_MANAGEMENT_SERVICE_PATH,
+    DeductiveReasoningService,
+    DEDUCTIVE_REASONING_SERVICE_PATH,
+    InductiveReasoningService,
+    INDUCTIVE_REASONING_SERVICE_PATH,
+    AbductiveReasoningService,
+    ABDUCTIVE_REASONING_SERVICE_PATH,
+    SupervisedLearningService,
+    SUPERVISED_LEARNING_SERVICE_PATH,
+    UnsupervisedLearningService,
+    UNSUPERVISED_LEARNING_SERVICE_PATH,
+    ReinforcementLearningService,
+    REINFORCEMENT_LEARNING_SERVICE_PATH
 } from '../common';
 import { AtomSpaceService } from './atomspace-service';
 import { KnowledgeManagementServiceImpl } from './knowledge-management-service-impl';
 // Phase 2 backend components
 import { CodeAnalysisAgent } from './code-analysis-agent';
+// Phase 3 reasoning engines
+import { PLNReasoningEngine, PatternMatchingEngine, CodeAnalysisReasoningEngine } from './reasoning-engines';
+// Phase 3 reasoning services
+import { DeductiveReasoningServiceImpl } from './deductive-reasoning-service';
+import { InductiveReasoningServiceImpl } from './inductive-reasoning-service';
+import { AbductiveReasoningServiceImpl } from './abductive-reasoning-service';
+// Phase 3 learning services
+import { SupervisedLearningServiceImpl } from './supervised-learning-service';
+import { UnsupervisedLearningServiceImpl } from './unsupervised-learning-service';
+import { ReinforcementLearningServiceImpl } from './reinforcement-learning-service';
 
 export default new ContainerModule(bind => {
     bind(OpenCogService).to(AtomSpaceService).inSingletonScope();
@@ -34,6 +56,21 @@ export default new ContainerModule(bind => {
     // Phase 2: Bind node-based code analysis agent
     bind(CodeAnalysisAgent).toSelf().inSingletonScope();
     bind(Symbol.for('Agent')).to(CodeAnalysisAgent).inSingletonScope();
+    
+    // Phase 3: Bind reasoning engines
+    bind(PLNReasoningEngine).toSelf().inSingletonScope();
+    bind(PatternMatchingEngine).toSelf().inSingletonScope();
+    bind(CodeAnalysisReasoningEngine).toSelf().inSingletonScope();
+    
+    // Phase 3: Bind reasoning services
+    bind(DeductiveReasoningService).to(DeductiveReasoningServiceImpl).inSingletonScope();
+    bind(InductiveReasoningService).to(InductiveReasoningServiceImpl).inSingletonScope();
+    bind(AbductiveReasoningService).to(AbductiveReasoningServiceImpl).inSingletonScope();
+    
+    // Phase 3: Bind learning services
+    bind(SupervisedLearningService).to(SupervisedLearningServiceImpl).inSingletonScope();
+    bind(UnsupervisedLearningService).to(UnsupervisedLearningServiceImpl).inSingletonScope();
+    bind(ReinforcementLearningService).to(ReinforcementLearningServiceImpl).inSingletonScope();
     
     bind(ConnectionHandler).toDynamicValue(ctx =>
         new RpcConnectionHandler(OPENCOG_SERVICE_PATH, () =>
@@ -44,6 +81,44 @@ export default new ContainerModule(bind => {
     bind(ConnectionHandler).toDynamicValue(ctx =>
         new RpcConnectionHandler(KNOWLEDGE_MANAGEMENT_SERVICE_PATH, () =>
             ctx.container.get(KnowledgeManagementService)
+        )
+    ).inSingletonScope();
+    
+    // Phase 3: Bind reasoning service connection handlers
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(DEDUCTIVE_REASONING_SERVICE_PATH, () =>
+            ctx.container.get(DeductiveReasoningService)
+        )
+    ).inSingletonScope();
+    
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(INDUCTIVE_REASONING_SERVICE_PATH, () =>
+            ctx.container.get(InductiveReasoningService)
+        )
+    ).inSingletonScope();
+    
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(ABDUCTIVE_REASONING_SERVICE_PATH, () =>
+            ctx.container.get(AbductiveReasoningService)
+        )
+    ).inSingletonScope();
+    
+    // Phase 3: Bind learning service connection handlers
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(SUPERVISED_LEARNING_SERVICE_PATH, () =>
+            ctx.container.get(SupervisedLearningService)
+        )
+    ).inSingletonScope();
+    
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(UNSUPERVISED_LEARNING_SERVICE_PATH, () =>
+            ctx.container.get(UnsupervisedLearningService)
+        )
+    ).inSingletonScope();
+    
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(REINFORCEMENT_LEARNING_SERVICE_PATH, () =>
+            ctx.container.get(ReinforcementLearningService)
         )
     ).inSingletonScope();
 });
