@@ -60,7 +60,8 @@ export interface AtomPattern {
  * Reasoning query structure
  */
 export interface ReasoningQuery {
-    type: 'deductive' | 'inductive' | 'abductive' | 'code-analysis' | 'code-completion';
+    type: 'deductive' | 'inductive' | 'abductive' | 'code-analysis' | 'code-completion' | 
+          'problem-analysis' | 'approach-selection' | 'debugging-assistance' | 'assistance-analysis';
     atoms?: Atom[];
     context?: any;
     parameters?: Record<string, any>;
@@ -101,6 +102,8 @@ export interface LearningContext {
     userExperience?: 'beginner' | 'intermediate' | 'advanced' | 'expert';
     preferences?: Record<string, any>;
     environmentInfo?: Record<string, any>;
+    reasoningType?: string;
+    interactionType?: string;
 }
 
 /**
@@ -162,7 +165,7 @@ export interface UserBehaviorPattern {
 export interface PatternInput {
     data: any;
     context?: any;
-    scope?: 'local' | 'global' | 'project' | 'file' | 'session';
+    scope?: 'local' | 'global' | 'project' | 'file' | 'session' | 'domain-specific' | 'comprehensive';
     options?: PatternRecognitionOptions;
 }
 
@@ -205,7 +208,11 @@ export type PatternType =
     | 'usage-pattern'
     | 'growth-pattern'
     | 'refactoring-pattern'
-    | 'maintenance-pattern';
+    | 'maintenance-pattern'
+    // Phase 3 intelligent assistance patterns
+    | 'code-quality'
+    | 'potential-issue' 
+    | 'improvement-opportunity';
 
 /**
  * Pattern recognition result
