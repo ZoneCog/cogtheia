@@ -15,7 +15,7 @@
 // *****************************************************************************
 
 import { injectable, inject } from '@theia/core/shared/inversify';
-import { Agent } from '@theia/ai-core/lib/common/agent';
+import { Agent, LanguageModelRequirement } from '@theia/ai-core/lib/common/agent';
 import { WorkspaceService } from '@theia/workspace/lib/browser';
 import { OpenCogService } from '../common/opencog-service';
 import { LearningData, UserFeedback, LearningContext, UserBehaviorPattern, AdaptationStrategy } from '../common/opencog-types';
@@ -77,7 +77,45 @@ export interface WorkflowOptimization {
  * and workflow optimization learning as specified in Phase 2 requirements
  */
 @injectable()
-export class LearningAgent extends Agent {
+export class LearningAgent implements Agent {
+    readonly id = 'opencog-learning';
+    readonly name = 'Learning Agent';
+    readonly description = 'Learns from developer behavior, code quality, and workflows';
+    
+    readonly variables = [
+        'developerProfile',
+        'codeQuality',
+        'workflowOptimization',
+        'learningProgress'
+    ];
+    
+    readonly functions = [
+        'learn-behavior',
+        'learn-quality',
+        'optimize-workflow',
+        'get-recommendations'
+    ];
+
+    readonly prompts = [
+        {
+            id: 'learning-analysis-prompt',
+            content: `Analyze learning data and provide insights:
+            
+Developer Profile: {{developerProfile}}
+Code Quality Metrics: {{codeQuality}}
+Workflow Data: {{workflowOptimization}}
+Learning Progress: {{learningProgress}}
+
+Provide actionable recommendations for improvement based on the learning data.`
+        }
+    ];
+
+    languageModelRequirements: LanguageModelRequirement[] = [
+        {
+            purpose: 'learning-analysis',
+            identifier: 'learning-model',
+        }
+    ];
 
     private developerProfiles = new Map<string, DeveloperBehaviorLearning>();
     private codeQualityData = new Map<string, CodeQualityLearning>();
@@ -87,7 +125,6 @@ export class LearningAgent extends Agent {
         @inject(OpenCogService) private readonly opencog: OpenCogService,
         @inject(WorkspaceService) private readonly workspace: WorkspaceService
     ) {
-        super('opencog-learning', 'Learning Agent', 'Learns from developer behavior, code quality, and workflows');
         this.initializeLearningModels();
     }
 
