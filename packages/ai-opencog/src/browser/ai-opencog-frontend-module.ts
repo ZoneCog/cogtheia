@@ -17,7 +17,13 @@
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { 
     OpenCogService,
-    KnowledgeManagementService
+    KnowledgeManagementService,
+    DeductiveReasoningService,
+    InductiveReasoningService,
+    AbductiveReasoningService,
+    SupervisedLearningService,
+    UnsupervisedLearningService,
+    ReinforcementLearningService
 } from '../common';
 import { FrontendOpenCogService } from './frontend-opencog-service';
 import { FrontendKnowledgeManagementService } from './frontend-knowledge-management-service';
@@ -37,6 +43,17 @@ import { AdvancedReasoningAgent } from './advanced-reasoning-agent';
 import { UserBehaviorLearningAgent } from './user-behavior-learning-agent';
 import { UserBehaviorMonitorService } from './user-behavior-monitor-service';
 import { SpecializedProblemSolvingAgent } from './specialized-problem-solving-agent';
+// Phase 3 frontend services
+import { 
+    FrontendDeductiveReasoningService,
+    FrontendInductiveReasoningService,
+    FrontendAbductiveReasoningService
+} from './frontend-reasoning-services';
+import {
+    FrontendSupervisedLearningService,
+    FrontendUnsupervisedLearningService,
+    FrontendReinforcementLearningService
+} from './frontend-learning-services';
 
 export default new ContainerModule(bind => {
     // Bind the frontend OpenCog service
@@ -44,6 +61,16 @@ export default new ContainerModule(bind => {
     
     // Bind the frontend Knowledge Management service
     bind(KnowledgeManagementService).to(FrontendKnowledgeManagementService).inSingletonScope();
+    
+    // Phase 3: Bind frontend reasoning services
+    bind(DeductiveReasoningService).to(FrontendDeductiveReasoningService).inSingletonScope();
+    bind(InductiveReasoningService).to(FrontendInductiveReasoningService).inSingletonScope();
+    bind(AbductiveReasoningService).to(FrontendAbductiveReasoningService).inSingletonScope();
+    
+    // Phase 3: Bind frontend learning services
+    bind(SupervisedLearningService).to(FrontendSupervisedLearningService).inSingletonScope();
+    bind(UnsupervisedLearningService).to(FrontendUnsupervisedLearningService).inSingletonScope();
+    bind(ReinforcementLearningService).to(FrontendReinforcementLearningService).inSingletonScope();
     
     // Bind the existing agents
     bind(CodeAnalysisAgent).toSelf().inSingletonScope();

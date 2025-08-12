@@ -19,3 +19,5 @@ export * from './opencog-service';
 export * from './protocol';
 export * from './knowledge-management-types';
 export * from './knowledge-management-service';
+export * from './reasoning-services';
+export * from './learning-services';
