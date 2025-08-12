@@ -34,6 +34,8 @@ import { CognitiveEditorIntegration } from './cognitive-editor-integration';
 import { ComprehensiveCodeAnalysisAgent } from './comprehensive-code-analysis-agent';
 import { IntelligentAssistanceAgent } from './intelligent-assistance-agent';
 import { AdvancedReasoningAgent } from './advanced-reasoning-agent';
+import { UserBehaviorLearningAgent } from './user-behavior-learning-agent';
+import { UserBehaviorMonitorService } from './user-behavior-monitor-service';
 
 export default new ContainerModule(bind => {
     // Bind the frontend OpenCog service
@@ -57,6 +59,10 @@ export default new ContainerModule(bind => {
     bind(ComprehensiveCodeAnalysisAgent).toSelf().inSingletonScope();
     bind(IntelligentAssistanceAgent).toSelf().inSingletonScope();
     bind(AdvancedReasoningAgent).toSelf().inSingletonScope();
+    bind(UserBehaviorLearningAgent).toSelf().inSingletonScope();
+    
+    // Bind user behavior monitoring service
+    bind(UserBehaviorMonitorService).to(UserBehaviorMonitorService).inSingletonScope();
     
     // Bind editor integration
     bind(CognitiveEditorIntegration).toSelf().inSingletonScope();
@@ -71,4 +77,5 @@ export default new ContainerModule(bind => {
     bind(Symbol.for('Agent')).to(ComprehensiveCodeAnalysisAgent).inSingletonScope();
     bind(Symbol.for('Agent')).to(IntelligentAssistanceAgent).inSingletonScope();
     bind(Symbol.for('Agent')).to(AdvancedReasoningAgent).inSingletonScope();
+    bind(Symbol.for('Agent')).to(UserBehaviorLearningAgent).inSingletonScope();
 });
