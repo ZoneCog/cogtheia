@@ -36,6 +36,7 @@ import { IntelligentAssistanceAgent } from './intelligent-assistance-agent';
 import { AdvancedReasoningAgent } from './advanced-reasoning-agent';
 import { UserBehaviorLearningAgent } from './user-behavior-learning-agent';
 import { UserBehaviorMonitorService } from './user-behavior-monitor-service';
+import { SpecializedProblemSolvingAgent } from './specialized-problem-solving-agent';
 
 export default new ContainerModule(bind => {
     // Bind the frontend OpenCog service
@@ -60,6 +61,7 @@ export default new ContainerModule(bind => {
     bind(IntelligentAssistanceAgent).toSelf().inSingletonScope();
     bind(AdvancedReasoningAgent).toSelf().inSingletonScope();
     bind(UserBehaviorLearningAgent).toSelf().inSingletonScope();
+    bind(SpecializedProblemSolvingAgent).toSelf().inSingletonScope();
     
     // Bind user behavior monitoring service
     bind(UserBehaviorMonitorService).to(UserBehaviorMonitorService).inSingletonScope();
@@ -78,4 +80,5 @@ export default new ContainerModule(bind => {
     bind(Symbol.for('Agent')).to(IntelligentAssistanceAgent).inSingletonScope();
     bind(Symbol.for('Agent')).to(AdvancedReasoningAgent).inSingletonScope();
     bind(Symbol.for('Agent')).to(UserBehaviorLearningAgent).inSingletonScope();
+    bind(Symbol.for('Agent')).to(SpecializedProblemSolvingAgent).inSingletonScope();
 });
