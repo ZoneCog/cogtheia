@@ -25,6 +25,9 @@ jobs:
       issues: write
     
     steps:
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y libx11-dev libxkbfile-dev
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -194,6 +197,9 @@ jobs:
     if: github.event_name == 'schedule' || github.event.inputs.force_dependency_audit == 'true'
     
     steps:
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y libx11-dev libxkbfile-dev
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
