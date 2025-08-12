@@ -60,6 +60,9 @@
       "path": "../../packages/ai-openai"
     },
     {
+      "path": "../../packages/ai-opencog"
+    },
+    {
       "path": "../../packages/ai-scanoss"
     },
     {
