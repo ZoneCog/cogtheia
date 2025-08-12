@@ -2,9 +2,9 @@ name: Automated Code Quality & Dependency Management
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ master ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ master ]
   schedule:
     # Run nightly at 2 AM UTC for automated maintenance
     - cron: '0 2 * * *'
