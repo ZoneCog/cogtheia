@@ -203,6 +203,7 @@
     "lint": "theiaext lint",
     "download:json-schema": "node ./scripts/download-catalog.js",
     "test": "theiaext test",
+    "typecheck": "theiaext typecheck",
     "version": "npm run -s generate-theia-re-exports",
     "watch": "theiaext watch"
   },
