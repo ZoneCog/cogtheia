@@ -26,6 +26,7 @@ jobs:
       - name: Install and Build
         shell: bash
         run: |
+          rm -rf node_modules
           npm ci
           npm run build
         env:
