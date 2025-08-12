@@ -34,6 +34,7 @@ jobs:
       - name: Build Browser Example Application for Production
         shell: bash
         run: |
+          rm -rf node_modules
           npm ci
           cd examples/browser && npm run build:production
         env:

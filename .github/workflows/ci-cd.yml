@@ -34,6 +34,7 @@ jobs:
       - name: Install and Build
         shell: bash
         run: |
+          rm -rf node_modules
           npm ci
           ./scripts/check_git_status.sh
         env:
@@ -74,6 +75,7 @@ jobs:
       - name: Build
         shell: bash
         run: |
+          rm -rf node_modules
           npm ci
           npm run build
           git status
