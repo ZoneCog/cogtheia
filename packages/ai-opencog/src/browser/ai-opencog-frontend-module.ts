@@ -54,6 +54,14 @@ import {
     FrontendUnsupervisedLearningService,
     FrontendReinforcementLearningService
 } from './frontend-learning-services';
+// Phase 4 sensor-motor system
+import { CodeChangeSensor } from './code-change-sensor';
+import { ActivitySensor } from './activity-sensor';
+import { EnvironmentSensor } from './environment-sensor';
+import { CodeModificationActuator } from './code-modification-actuator';
+import { ToolControlActuator } from './tool-control-actuator';
+import { EnvironmentManagementActuator } from './environment-management-actuator';
+import { SensorMotorService } from './sensor-motor-service';
 
 export default new ContainerModule(bind => {
     // Bind the frontend OpenCog service
@@ -108,4 +116,13 @@ export default new ContainerModule(bind => {
     bind(Symbol.for('Agent')).to(AdvancedReasoningAgent).inSingletonScope();
     bind(Symbol.for('Agent')).to(UserBehaviorLearningAgent).inSingletonScope();
     bind(Symbol.for('Agent')).to(SpecializedProblemSolvingAgent).inSingletonScope();
+
+    // Phase 4: Bind sensor-motor system components
+    bind(CodeChangeSensor).toSelf().inSingletonScope();
+    bind(ActivitySensor).toSelf().inSingletonScope();
+    bind(EnvironmentSensor).toSelf().inSingletonScope();
+    bind(CodeModificationActuator).toSelf().inSingletonScope();
+    bind(ToolControlActuator).toSelf().inSingletonScope();
+    bind(EnvironmentManagementActuator).toSelf().inSingletonScope();
+    bind(SensorMotorService).toSelf().inSingletonScope();
 });
