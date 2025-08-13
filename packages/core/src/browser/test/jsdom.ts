@@ -30,21 +30,21 @@ export function enableJSDOM(): () => void {
 
     // do nothing if running in browser
     try {
-        global;
+        globalThis;
     } catch (e) {
         return () => { };
     }
     // no need to enable twice
-    if (typeof (global as any)['_disableJSDOM'] === 'function') {
-        return (global as any)['_disableJSDOM'];
+    if (typeof (globalThis as any)['_disableJSDOM'] === 'function') {
+        return (globalThis as any)['_disableJSDOM'];
     }
     const dom = new JSDOM('<!doctype html><html><body></body></html>', {
         url: 'http://localhost/'
     });
-    (global as any)['document'] = dom.window.document;
-    (global as any)['window'] = dom.window;
+    (globalThis as any)['document'] = dom.window.document;
+    (globalThis as any)['window'] = dom.window;
     try {
-        (global as any)['navigator'] = { userAgent: 'node.js', platform: 'Mac' };
+        (globalThis as any)['navigator'] = { userAgent: 'node.js', platform: 'Mac' };
 
     } catch (e) {
         // node 21+ already has a navigator object
@@ -52,23 +52,23 @@ export function enableJSDOM(): () => void {
 
     const toCleanup: string[] = [];
     Object.getOwnPropertyNames((dom.window as any)).forEach(property => {
-        if (!(property in global)) {
-            (global as any)[property] = (dom.window as any)[property];
+        if (!(property in globalThis)) {
+            (globalThis as any)[property] = (dom.window as any)[property];
             toCleanup.push(property);
         }
     });
     (dom.window.document as any)['queryCommandSupported'] = function (): void { };
 
-    const disableJSDOM = (global as any)['_disableJSDOM'] = () => {
+    const disableJSDOM = (globalThis as any)['_disableJSDOM'] = () => {
         let property: string | undefined;
         while (property = toCleanup.pop()) {
-            delete (global as any)[property];
+            delete (globalThis as any)[property];
         }
         delete (dom.window.document as any)['queryCommandSupported'];
-        delete (global as any)['document'];
-        delete (global as any)['window'];
-        delete (global as any)['navigator'];
-        delete (global as any)['_disableJSDOM'];
+        delete (globalThis as any)['document'];
+        delete (globalThis as any)['window'];
+        delete (globalThis as any)['navigator'];
+        delete (globalThis as any)['_disableJSDOM'];
     };
     return disableJSDOM;
 }

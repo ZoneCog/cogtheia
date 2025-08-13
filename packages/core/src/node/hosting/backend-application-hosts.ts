@@ -15,6 +15,7 @@
 // *****************************************************************************
 
 import { injectable, postConstruct } from 'inversify';
+import process from "node:process";
 
 /**
  * **Important: This component is not bound on Electron.**

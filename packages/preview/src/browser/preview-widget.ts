@@ -210,7 +210,7 @@ export class PreviewWidget extends BaseWidget implements Navigatable {
         if (elementToReveal) {
             this.preventScrollNotification = true;
             elementToReveal.scrollIntoView();
-            window.setTimeout(() => {
+            globalThis.setTimeout(() => {
                 this.preventScrollNotification = false;
             }, 50);
         }
@@ -227,7 +227,7 @@ export class PreviewWidget extends BaseWidget implements Navigatable {
         if (elementToReveal) {
             this.preventScrollNotification = true;
             elementToReveal.scrollIntoView();
-            window.setTimeout(() => {
+            globalThis.setTimeout(() => {
                 this.preventScrollNotification = false;
             }, 50);
         }

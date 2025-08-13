@@ -17,6 +17,7 @@
 import { parse as parseUrl, Url } from 'url';
 import * as httpAgent from 'http-proxy-agent';
 import * as httpsAgent from 'https-proxy-agent';
+import process from "node:process";
 
 export type ProxyAgent = httpAgent.HttpProxyAgent | httpsAgent.HttpsProxyAgent;
 

@@ -20,6 +20,7 @@ import { injectable } from '@theia/core/shared/inversify';
 import { OS } from '@theia/core/lib/common/os';
 import { FileUri } from '@theia/core/lib/common/file-uri';
 import { ExternalTerminalService, ExternalTerminalConfiguration } from '../common/external-terminal';
+import process from "node:process";
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.

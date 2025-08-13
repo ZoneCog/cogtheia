@@ -170,25 +170,25 @@ export class SampleCommandContribution implements CommandContribution {
                         text: 'Starting to report progress',
                     })
                     .then(progress => {
-                        window.setTimeout(() => {
+                        globalThis.setTimeout(() => {
                             progress.report({
                                 message: 'First step completed',
                                 work: { done: 25, total: 100 }
                             });
                         }, 2000);
-                        window.setTimeout(() => {
+                        globalThis.setTimeout(() => {
                             progress.report({
                                 message: 'Next step completed',
                                 work: { done: 60, total: 100 }
                             });
                         }, 4000);
-                        window.setTimeout(() => {
+                        globalThis.setTimeout(() => {
                             progress.report({
                                 message: 'Complete',
                                 work: { done: 100, total: 100 }
                             });
                         }, 6000);
-                        window.setTimeout(() => progress.cancel(), 7000);
+                        globalThis.setTimeout(() => progress.cancel(), 7000);
                     });
             }
         });
@@ -199,22 +199,22 @@ export class SampleCommandContribution implements CommandContribution {
                         text: 'Starting to report indeterminate progress',
                     })
                     .then(progress => {
-                        window.setTimeout(() => {
+                        globalThis.setTimeout(() => {
                             progress.report({
                                 message: 'First step completed',
                             });
                         }, 2000);
-                        window.setTimeout(() => {
+                        globalThis.setTimeout(() => {
                             progress.report({
                                 message: 'Next step completed',
                             });
                         }, 4000);
-                        window.setTimeout(() => {
+                        globalThis.setTimeout(() => {
                             progress.report({
                                 message: 'Complete',
                             });
                         }, 6000);
-                        window.setTimeout(() => progress.cancel(), 7000);
+                        globalThis.setTimeout(() => progress.cancel(), 7000);
                     });
             }
         });

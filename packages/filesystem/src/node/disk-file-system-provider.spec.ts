@@ -29,6 +29,7 @@ import { generateUuid } from '@theia/core/lib/common/uuid';
 import { FilePermission, FileSystemProviderCapabilities, FileSystemProviderError, FileSystemProviderErrorCode } from '../common/files';
 import { DiskFileSystemProvider } from './disk-file-system-provider';
 import { bindFileSystemWatcherServer } from './filesystem-backend-module';
+import { Buffer } from "node:buffer";
 
 const tracked = temp.track();
 

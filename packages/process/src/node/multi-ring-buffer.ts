@@ -17,6 +17,7 @@
 import * as stream from 'stream';
 import { inject, injectable } from '@theia/core/shared/inversify';
 import { Disposable } from '@theia/core/lib/common';
+import { Buffer } from "node:buffer";
 
 /**
  * The MultiRingBuffer is a ring buffer implementation that allows

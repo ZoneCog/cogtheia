@@ -22,6 +22,7 @@ import { ApplicationPackage, ApplicationPackageOptions } from '@theia/applicatio
 import { WebpackGenerator, FrontendGenerator, BackendGenerator } from './generator';
 import { ApplicationProcess } from './application-process';
 import { GeneratorOptions } from './generator/abstract-generator';
+import process from "node:process";
 import yargs = require('yargs');
 
 // Declare missing exports from `@types/semver@7`

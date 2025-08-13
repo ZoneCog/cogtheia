@@ -16,6 +16,7 @@
 
 import { createConnection } from 'net';
 import { stdin, argv, stdout } from 'process';
+import process from "node:process";
 
 /**
  * this node.js Program is supposed to be executed by an docker exec session inside a docker container.

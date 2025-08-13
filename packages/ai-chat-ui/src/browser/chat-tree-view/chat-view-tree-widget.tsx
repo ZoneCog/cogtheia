@@ -258,7 +258,7 @@ export class ChatViewTreeWidget extends TreeWidget {
                 if (this._scrollButtonDebounceTimer !== undefined) {
                     clearTimeout(this._scrollButtonDebounceTimer);
                 }
-                this._scrollButtonDebounceTimer = window.setTimeout(() => {
+                this._scrollButtonDebounceTimer = globalThis.setTimeout(() => {
                     // Re-check: only show if we're still not at bottom
                     if (!this.atBottom) {
                         this._showScrollButton = true;

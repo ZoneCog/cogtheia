@@ -24,6 +24,7 @@ import * as stream from 'stream';
 // The class was here before, exporting to not break anything.
 export { DevNullStream } from './dev-null-stream';
 import { DevNullStream } from './dev-null-stream';
+import process from "node:process";
 
 export const RawProcessOptions = Symbol('RawProcessOptions');
 

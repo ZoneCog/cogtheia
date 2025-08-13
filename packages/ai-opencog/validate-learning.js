@@ -6,14 +6,15 @@
  */
 
 // Mock the required dependencies for testing
+import process from "node:process";
 const mockInversify = {
     injectable: () => (target) => target,
     inject: () => () => {}
 };
 
 // Set up global mocks
-global.injectable = mockInversify.injectable;
-global.inject = mockInversify.inject;
+globalThis.injectable = mockInversify.injectable;
+globalThis.inject = mockInversify.inject;
 
 // Mock Theia dependencies
 const mockTheia = {

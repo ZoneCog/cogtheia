@@ -25,6 +25,7 @@ import { PluginPaths } from './paths/const';
 import { PluginPathsService } from '../common/plugin-paths-protocol';
 import { KeysToAnyValues, KeysToKeysToAnyValue } from '../../common/types';
 import { PluginStorageKind } from '../../common';
+import process from "node:process";
 
 export interface Store {
     fsPath: string

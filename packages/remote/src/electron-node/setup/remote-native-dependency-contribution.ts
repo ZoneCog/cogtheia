@@ -17,6 +17,7 @@
 import { isObject } from '@theia/core';
 import { RequestOptions } from '@theia/core/shared/@theia/request';
 import { RemotePlatform } from '@theia/core/lib/node/remote/remote-cli-contribution';
+import { Buffer } from "node:buffer";
 
 export interface FileDependencyResult {
     path: string;

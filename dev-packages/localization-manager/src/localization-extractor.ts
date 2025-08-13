@@ -22,6 +22,7 @@ import { glob } from 'glob';
 import { promisify } from 'util';
 import deepmerge = require('deepmerge');
 import { Localization, sortLocalization } from './common';
+import process from "node:process";
 
 const globPromise = promisify(glob);
 

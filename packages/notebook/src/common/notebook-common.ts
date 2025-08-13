@@ -18,6 +18,7 @@ import { Command, URI, isObject } from '@theia/core';
 import { MarkdownString } from '@theia/core/lib/common/markdown-rendering/markdown-string';
 import { BinaryBuffer } from '@theia/core/lib/common/buffer';
 import { UriComponents } from '@theia/core/lib/common/uri';
+import { Buffer } from "node:buffer";
 
 export interface NotebookCommand extends Command {
     title?: string;

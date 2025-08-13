@@ -266,7 +266,7 @@ export class DebugHoverWidget extends SourceTreeWidget implements monaco.editor.
 
         super.show();
         await new Promise<void>(resolve => {
-            setTimeout(() => window.requestAnimationFrame(() => {
+            setTimeout(() => globalThis.requestAnimationFrame(() => {
                 this.editor.getControl().layoutContentWidget(this);
                 resolve();
             }), 0);

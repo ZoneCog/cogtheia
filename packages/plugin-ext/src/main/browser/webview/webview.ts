@@ -681,9 +681,9 @@ export class WebviewWidget extends BaseWidget implements StatefulWidget, Extract
                 handler(e.data.data);
             }
         };
-        window.addEventListener('message', listener);
+        globalThis.addEventListener('message', listener);
         return Disposable.create(() =>
-            window.removeEventListener('message', listener)
+            globalThis.removeEventListener('message', listener)
         );
     }
 

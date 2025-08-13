@@ -19,6 +19,7 @@ import * as fs from 'fs';
 import * as os from 'os';
 
 import type { Compiler } from 'webpack';
+import process from "node:process";
 
 const REQUIRE_RIPGREP = '@vscode/ripgrep';
 const REQUIRE_VSCODE_WINDOWS_CA_CERTS = '@vscode/windows-ca-certs';

@@ -19,6 +19,8 @@ import * as https from 'https';
 import { getProxyAgent, ProxyAgent } from './proxy';
 import { Headers, RequestConfiguration, RequestContext, RequestOptions, RequestService, CancellationToken } from './common-request-service';
 import { createGunzip } from 'zlib';
+import process from "node:process";
+import { Buffer } from "node:buffer";
 
 export interface RawRequestFunction {
     (options: http.RequestOptions, callback?: (res: http.IncomingMessage) => void): http.ClientRequest;

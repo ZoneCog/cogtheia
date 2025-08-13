@@ -30,6 +30,7 @@ import { MsgPackExtensionManager } from '@theia/core/lib/common/message-rpc/msg-
 import { URI as VSCodeURI } from '@theia/core/shared/vscode-uri';
 import { BinaryBuffer } from '@theia/core/lib/common/buffer';
 import { Range, Position } from '../plugin/types-impl';
+import { setImmediate } from "node:timers";
 
 export interface MessageConnection {
     send(msg: string): void;

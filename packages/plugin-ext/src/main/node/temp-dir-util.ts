@@ -16,6 +16,7 @@
 import * as os from 'os';
 import * as path from 'path';
 import { realpathSync, promises as fs } from 'fs';
+import process from "node:process";
 
 export function getTempDir(name: string): string {
     let tempDir = os.tmpdir();

@@ -54,7 +54,7 @@ export class DefaultSecondaryWindowService implements SecondaryWindowService {
     @postConstruct()
     init(): void {
         // Set up messaging with secondary windows
-        window.addEventListener('message', (event: MessageEvent) => {
+        globalThis.addEventListener('message', (event: MessageEvent) => {
             console.trace('Message on main window', event);
             if (event.data.fromSecondary) {
                 console.trace('Message comes from secondary window');
@@ -99,7 +99,7 @@ export class DefaultSecondaryWindowService implements SecondaryWindowService {
         if (this.preferenceService.get('window.secondaryWindowAlwaysOnTop')) {
             options += ',alwaysOnTop=true';
         }
-        const newWindow = window.open(DefaultSecondaryWindowService.SECONDARY_WINDOW_URL, this.nextWindowId(), options) ?? undefined;
+        const newWindow = globalThis.open(DefaultSecondaryWindowService.SECONDARY_WINDOW_URL, this.nextWindowId(), options) ?? undefined;
         if (newWindow) {
             this.secondaryWindows.push(newWindow);
             this.onWindowOpenedEmitter.fire(newWindow);
@@ -158,30 +158,30 @@ export class DefaultSecondaryWindowService implements SecondaryWindowService {
             case 'originalSize': {
                 height = widget.node.clientHeight;
                 width = widget.node.clientWidth;
-                left = window.screenLeft + clientBounds.x;
-                top = window.screenTop + (window.outerHeight - window.innerHeight) + offsetY;
+                left = globalThis.screenLeft + clientBounds.x;
+                top = globalThis.screenTop + (globalThis.outerHeight - globalThis.innerHeight) + offsetY;
                 if (environment.electron.is()) {
-                    top = window.screenTop + clientBounds.y;
+                    top = globalThis.screenTop + clientBounds.y;
                 }
                 break;
             }
             case 'halfWidth': {
-                height = window.innerHeight - (window.outerHeight - window.innerHeight);
-                width = window.innerWidth / 2;
-                left = window.screenLeft;
-                top = window.screenTop;
+                height = globalThis.innerHeight - (globalThis.outerHeight - globalThis.innerHeight);
+                width = globalThis.innerWidth / 2;
+                left = globalThis.screenLeft;
+                top = globalThis.screenTop;
                 if (!environment.electron.is()) {
-                    height = window.innerHeight + clientBounds.y - offsetY;
+                    height = globalThis.innerHeight + clientBounds.y - offsetY;
                 }
                 break;
             }
             case 'fullSize': {
-                height = window.innerHeight - (window.outerHeight - window.innerHeight);
-                width = window.innerWidth;
-                left = window.screenLeft;
-                top = window.screenTop;
+                height = globalThis.innerHeight - (globalThis.outerHeight - globalThis.innerHeight);
+                width = globalThis.innerWidth;
+                left = globalThis.screenLeft;
+                top = globalThis.screenTop;
                 if (!environment.electron.is()) {
-                    height = window.innerHeight + clientBounds.y - offsetY;
+                    height = globalThis.innerHeight + clientBounds.y - offsetY;
                 }
                 break;
             }

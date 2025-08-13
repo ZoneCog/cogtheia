@@ -14,6 +14,7 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 // @ts-check
+import process from "node:process";
 const puppeteer = require('puppeteer');
 const fsx = require('fs-extra');
 const { resolve } = require('path');

@@ -29,6 +29,7 @@ import {
     CHANNEL_WC_METADATA, CHANNEL_ABOUT_TO_CLOSE, CHANNEL_OPEN_WITH_SYSTEM_APP,
     CHANNEL_OPEN_URL, CHANNEL_SET_THEME
 } from '../electron-common/electron-api';
+import process from "node:process";
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { ipcRenderer, contextBridge } = require('electron');

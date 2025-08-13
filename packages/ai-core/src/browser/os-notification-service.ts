@@ -247,7 +247,7 @@ export class OSNotificationService {
     private focusApplicationWindow(): void {
         try {
             if (typeof window !== 'undefined') {
-                window.focus();
+                globalThis.focus();
 
                 if (this.isElectron && (window as unknown as { electronTheiaCore?: { focusWindow?: () => void } }).electronTheiaCore?.focusWindow) {
                     (window as unknown as { electronTheiaCore: { focusWindow: () => void } }).electronTheiaCore.focusWindow();

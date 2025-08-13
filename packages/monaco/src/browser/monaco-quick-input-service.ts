@@ -113,7 +113,7 @@ export class MonacoQuickInputImplementation implements IQuickInputService {
         this.themeService.initialized.then(() => this.controller.applyStyles(this.computeStyles()));
         // Hook into the theming service of Monaco to ensure that the updates are ready.
         StandaloneServices.get(IStandaloneThemeService).onDidColorThemeChange(() => this.controller.applyStyles(this.computeStyles()));
-        window.addEventListener('resize', () => this.updateLayout());
+        globalThis.addEventListener('resize', () => this.updateLayout());
     }
 
     setContextKey(key: string | undefined): void {
@@ -226,7 +226,7 @@ export class MonacoQuickInputImplementation implements IQuickInputService {
     }
 
     private getClientDimension(): monaco.editor.IDimension {
-        return { width: window.innerWidth, height: window.innerHeight };
+        return { width: globalThis.innerWidth, height: globalThis.innerHeight };
     }
 
     // @monaco-uplift

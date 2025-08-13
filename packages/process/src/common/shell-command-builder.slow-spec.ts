@@ -22,7 +22,8 @@ import { spawn, execSync, SpawnOptions, ChildProcess, spawnSync } from 'child_pr
 import { Readable } from 'stream';
 import { join } from 'path';
 import { ShellCommandBuilder, CommandLineOptions, ProcessInfo } from './shell-command-builder';
-import * as chalk from 'chalk'; // tslint:disable-line:no-implicit-dependencies
+import * as chalk from 'chalk';
+import process from "node:process"; // tslint:disable-line:no-implicit-dependencies
 
 export interface TestProcessInfo extends ProcessInfo {
     shell: ChildProcess

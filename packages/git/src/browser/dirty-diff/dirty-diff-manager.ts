@@ -195,9 +195,9 @@ export class DirtyDiffModel implements Disposable {
             return;
         }
         if (this.updateTimeout) {
-            window.clearTimeout(this.updateTimeout);
+            globalThis.clearTimeout(this.updateTimeout);
         }
-        this.updateTimeout = window.setTimeout(() => {
+        this.updateTimeout = globalThis.setTimeout(() => {
             this.updateTimeout = undefined;
             if (!this.shouldRender(editor)) {
                 return;

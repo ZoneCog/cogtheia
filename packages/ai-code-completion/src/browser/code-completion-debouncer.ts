@@ -21,10 +21,10 @@ export class InlineCompletionDebouncer {
     debounce<T>(callback: () => Promise<T>, debounceDelay: number): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             if (this.timeoutId) {
-                window.clearTimeout(this.timeoutId);
+                globalThis.clearTimeout(this.timeoutId);
             }
 
-            this.timeoutId = window.setTimeout(() => {
+            this.timeoutId = globalThis.setTimeout(() => {
                 callback()
                     .then(resolve)
                     .catch(reject);

@@ -427,8 +427,8 @@ export class SearchInWorkspaceWidget extends BaseWidget implements StatefulWidge
         const searchOnType = this.searchInWorkspacePreferences['search.searchOnType'];
         if (searchOnType) {
             const delay = this.searchInWorkspacePreferences['search.searchOnTypeDebouncePeriod'] || 0;
-            window.clearTimeout(this._searchTimeout);
-            this._searchTimeout = window.setTimeout(() => this.doSearch(e), delay);
+            globalThis.clearTimeout(this._searchTimeout);
+            this._searchTimeout = globalThis.setTimeout(() => this.doSearch(e), delay);
         }
     };
 

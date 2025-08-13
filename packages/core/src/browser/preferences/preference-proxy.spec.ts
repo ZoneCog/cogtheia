@@ -32,6 +32,7 @@ import { FrontendApplicationConfigProvider } from '../frontend-application-confi
 import { PreferenceProxyOptions, PreferenceProxy, PreferenceChangeEvent, createPreferenceProxy } from './preference-proxy';
 import { PreferenceProxyFactory } from './injectable-preference-proxy';
 import { waitForEvent } from '../../common/promise-util';
+import process from "node:process";
 
 disableJSDOM();
 

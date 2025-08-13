@@ -86,9 +86,9 @@ export class PreviewContribution extends NavigatableWidgetOpenHandler<PreviewWid
     protected async lockScrollSync(on: 'preview' | 'editor', delay: number = 50): Promise<void> {
         this.scrollSyncLockOn = on;
         if (this.scrollSyncLockTimeout) {
-            window.clearTimeout(this.scrollSyncLockTimeout);
+            globalThis.clearTimeout(this.scrollSyncLockTimeout);
         }
-        this.scrollSyncLockTimeout = window.setTimeout(() => {
+        this.scrollSyncLockTimeout = globalThis.setTimeout(() => {
             this.scrollSyncLockOn = undefined;
         }, delay);
     }

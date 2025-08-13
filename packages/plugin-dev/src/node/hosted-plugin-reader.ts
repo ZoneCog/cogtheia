@@ -20,6 +20,7 @@ import { HostedPluginReader as PluginReaderHosted } from '@theia/plugin-ext/lib/
 import { Deferred } from '@theia/core/lib/common/promise-util';
 import { PluginDeployerHandler, PluginMetadata } from '@theia/plugin-ext/lib/common/plugin-protocol';
 import { PluginDeployerEntryImpl } from '@theia/plugin-ext/lib/main/node/plugin-deployer-entry-impl';
+import process from "node:process";
 
 @injectable()
 export class HostedPluginReader implements BackendApplicationContribution {

@@ -27,6 +27,7 @@ import * as sinon from 'sinon';
 import { FileChangesEvent, FileChangeType, FileStatWithMetadata } from '../common/files';
 import { FileResource } from './file-resource';
 import { FileService } from './file-service';
+import { setImmediate } from "node:timers";
 
 disableJSDOM();
 

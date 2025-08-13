@@ -20,6 +20,7 @@
  * non-private TypeScript projects in the monorepo.
  */
 
+import process from "node:process";
 const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');

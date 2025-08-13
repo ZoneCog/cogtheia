@@ -15,6 +15,7 @@
 // *****************************************************************************
 // @ts-check
 
+import process from "node:process";
 const cp = require('child_process');
 const fs = require('fs');
 const path = require('path');

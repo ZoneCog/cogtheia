@@ -28,6 +28,7 @@ import { RateLimiter } from 'limiter';
 import { LocalizationManager, extract } from '@theia/localization-manager';
 import { NodeRequestService } from '@theia/request/lib/node-request-service';
 import { ExtensionIdMatchesFilterFactory, OVSX_RATE_LIMIT, OVSXClient, OVSXHttpClient, OVSXRouterClient, RequestContainsFilterFactory } from '@theia/ovsx-client';
+import process from "node:process";
 
 const { executablePath } = require('puppeteer');
 

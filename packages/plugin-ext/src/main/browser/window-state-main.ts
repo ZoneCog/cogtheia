@@ -41,12 +41,12 @@ export class WindowStateMain implements WindowMain, Disposable {
         this.externalUriService = container.get(ExternalUriService);
 
         const fireDidFocus = () => this.onFocusChanged(true);
-        window.addEventListener('focus', fireDidFocus);
-        this.toDispose.push(Disposable.create(() => window.removeEventListener('focus', fireDidFocus)));
+        globalThis.addEventListener('focus', fireDidFocus);
+        this.toDispose.push(Disposable.create(() => globalThis.removeEventListener('focus', fireDidFocus)));
 
         const fireDidBlur = () => this.onFocusChanged(false);
-        window.addEventListener('blur', fireDidBlur);
-        this.toDispose.push(Disposable.create(() => window.removeEventListener('blur', fireDidBlur)));
+        globalThis.addEventListener('blur', fireDidBlur);
+        this.toDispose.push(Disposable.create(() => globalThis.removeEventListener('blur', fireDidBlur)));
 
        const tracker = new WindowActivityTracker(window);
        this.toDispose.push(tracker.onDidChangeActiveState(isActive => this.onActiveStateChanged(isActive)));

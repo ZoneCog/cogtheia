@@ -20,6 +20,7 @@ import * as fs from '@theia/core/shared/fs-extra';
 import * as path from 'path';
 import { FileUri } from '@theia/core/lib/node';
 import URI from '@theia/core/lib/common/uri';
+import process from "node:process";
 
 @injectable()
 export abstract class LocalPluginDeployerResolver implements PluginDeployerResolver {

@@ -18,6 +18,7 @@ import { RemoteCopyContribution, RemoteCopyRegistry } from '@theia/core/lib/node
 import { inject, injectable } from '@theia/core/shared/inversify';
 import { PluginCliContribution } from './plugin-cli-contribution';
 import { FileUri } from '@theia/core/lib/common/file-uri';
+import process from "node:process";
 
 @injectable()
 export class PluginRemoteCopyContribution implements RemoteCopyContribution {

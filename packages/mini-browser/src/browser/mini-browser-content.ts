@@ -378,7 +378,7 @@ export class MiniBrowserContent extends BaseWidget {
         // Start the fade-out transition.
         this.loadIndicator.classList.add(MiniBrowserContentStyle.FADE_OUT);
         // Actually hide the load indicator after the transition is finished.
-        const preloadStyle = window.getComputedStyle(this.loadIndicator);
+        const preloadStyle = globalThis.getComputedStyle(this.loadIndicator);
         const transitionDuration = parseCssTime(preloadStyle.transitionDuration, 0);
         setTimeout(() => {
             // But don't hide it if it was shown again since the transition started.
@@ -575,7 +575,7 @@ export class MiniBrowserContent extends BaseWidget {
                     this.input.title = `Open ${url} In A New Window`;
                 }
                 clearTimeout(this.frameLoadTimeout);
-                this.frameLoadTimeout = window.setTimeout(this.onFrameTimeout.bind(this), 4000);
+                this.frameLoadTimeout = globalThis.setTimeout(this.onFrameTimeout.bind(this), 4000);
                 if (showLoadIndicator) {
                     this.showLoadIndicator();
                 }

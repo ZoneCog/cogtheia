@@ -19,6 +19,7 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import { Localization, sortLocalization } from './common';
 import { deepl, DeeplLanguage, DeeplParameters, defaultLanguages, isSupportedLanguage } from './deepl-api';
+import process from "node:process";
 
 export interface LocalizationOptions {
     freeApi: Boolean

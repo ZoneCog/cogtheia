@@ -224,7 +224,7 @@ export async function outputWebviewPreload(ctx: PreloadContext): Promise<void> {
             });
             if (visible) {
                 this.element.getElementsByClassName('output-hidden')?.[0].remove();
-                window.requestAnimationFrame(() => this.outputElements.forEach(output => sendDidRenderMessage(this, output)));
+                globalThis.requestAnimationFrame(() => this.outputElements.forEach(output => sendDidRenderMessage(this, output)));
             } else {
                 const outputHiddenElement = document.createElement('div');
                 outputHiddenElement.classList.add('output-hidden');
@@ -703,7 +703,7 @@ export async function outputWebviewPreload(ctx: PreloadContext): Promise<void> {
                 }
 
                 // if the node is not scrollable, we can continue. We don't check the computed style always as it's expensive
-                if (window.getComputedStyle(node).overflowY === 'hidden' || window.getComputedStyle(node).overflowY === 'visible') {
+                if (globalThis.getComputedStyle(node).overflowY === 'hidden' || globalThis.getComputedStyle(node).overflowY === 'visible') {
                     continue;
                 }
 
@@ -725,7 +725,7 @@ export async function outputWebviewPreload(ctx: PreloadContext): Promise<void> {
         });
     };
 
-    window.addEventListener('message', async rawEvent => {
+    globalThis.addEventListener('message', async rawEvent => {
         const event = rawEvent as ({ data: webviewCommunication.ToWebviewMessage });
         let cellHandle: number | undefined;
         switch (event.data.type) {
@@ -786,7 +786,7 @@ export async function outputWebviewPreload(ctx: PreloadContext): Promise<void> {
                 break;
         }
     });
-    window.addEventListener('wheel', handleWheel);
+    globalThis.addEventListener('wheel', handleWheel);
 
     (document.head as HTMLHeadElement & { originalAppendChild: typeof document.head.appendChild }).originalAppendChild = document.head.appendChild;
     (document.head as HTMLHeadElement & { originalAppendChild: typeof document.head.appendChild }).appendChild = function appendChild<T extends Node>(node: T): T {
@@ -801,14 +801,14 @@ export async function outputWebviewPreload(ctx: PreloadContext): Promise<void> {
             theia.postMessage({ type: 'inputFocusChanged', focused: focus } as webviewCommunication.InputFocusChange);
         }
     };
-    window.addEventListener('focusin', (event: FocusEvent) => focusChange(event, true));
-    window.addEventListener('focusout', (event: FocusEvent) => focusChange(event, false));
+    globalThis.addEventListener('focusin', (event: FocusEvent) => focusChange(event, true));
+    globalThis.addEventListener('focusout', (event: FocusEvent) => focusChange(event, false));
 
     const webviewFocuseChange = (focus: boolean) => {
         theia.postMessage({ type: 'webviewFocusChanged', focused: focus } as webviewCommunication.WebviewFocusChange);
     };
-    window.addEventListener('focus', () => webviewFocuseChange(true));
-    window.addEventListener('blur', () => webviewFocuseChange(false));
+    globalThis.addEventListener('focus', () => webviewFocuseChange(true));
+    globalThis.addEventListener('blur', () => webviewFocuseChange(false));
 
     new ResizeObserver(() => {
         theia.postMessage({

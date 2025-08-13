@@ -23,6 +23,7 @@ import URI from '@theia/core/lib/common/uri';
 import { FileUri } from '@theia/core/lib/node';
 import { ParcelFileSystemWatcherService } from './parcel-filesystem-service';
 import { DidFilesChangedParams, FileChange, FileChangeType } from '../../common/filesystem-watcher-protocol';
+import process from "node:process";
 
 const expect = chai.expect;
 const track = temp.track();

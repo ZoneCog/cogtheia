@@ -31,7 +31,7 @@ export class TheiaSplitPanel extends SplitPanel {
                 const layout = this.layout as SplitLayout;
                 const handle = layout.handles.find(h => h.contains(event.target as HTMLElement));
                 if (handle) {
-                    const style = window.getComputedStyle(handle);
+                    const style = globalThis.getComputedStyle(handle);
                     oldCursor = this.node.style.cursor;
                     this.node.style.cursor = style.cursor;
                 }

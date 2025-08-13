@@ -16,6 +16,7 @@
 
 import * as bent from 'bent';
 import { RateLimiter } from 'limiter';
+import { Buffer } from "node:buffer";
 
 const post = bent('POST', 'json', 200);
 // 50 is the maximum amount of translations per request

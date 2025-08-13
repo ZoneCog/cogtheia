@@ -24,6 +24,7 @@ import { isWindows } from '../../common/os';
 import { FileUri } from '../../common/file-uri';
 import { BackendApplicationPath } from '../backend-application';
 import { BackendApplicationConfigProvider } from '../backend-application-config-provider';
+import process from "node:process";
 
 @injectable()
 export class EnvVariablesServerImpl implements EnvVariablesServer {

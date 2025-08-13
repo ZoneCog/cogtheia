@@ -31,7 +31,7 @@ import { ElectronConnectionHandler } from './messaging/electron-connection-handl
 
 const electronSecurityToken: ElectronSecurityToken = { value: generateUuid() };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-(global as any)[ElectronSecurityToken] = electronSecurityToken;
+(globalThis as any)[ElectronSecurityToken] = electronSecurityToken;
 
 export default new ContainerModule(bind => {
     bind(ElectronMainApplication).toSelf().inSingletonScope();

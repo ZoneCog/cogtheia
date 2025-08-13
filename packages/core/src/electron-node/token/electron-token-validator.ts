@@ -21,6 +21,8 @@ import { injectable, postConstruct } from 'inversify';
 import { isObject, isString, MaybePromise } from '../../common';
 import { ElectronSecurityToken } from '../../electron-common/electron-token';
 import { WsRequestValidatorContribution } from '../../node/ws-request-validators';
+import { Buffer } from "node:buffer";
+import process from "node:process";
 
 /**
  * On Electron, we want to make sure that only Electron's browser-windows access the backend services.

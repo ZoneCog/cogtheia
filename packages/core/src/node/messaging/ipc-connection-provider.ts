@@ -21,6 +21,7 @@ import { createInterface } from 'readline';
 import { Channel, ConnectionErrorHandler, Disposable, DisposableCollection, ILogger } from '../../common';
 import { IPCChannel } from './ipc-channel';
 import { createIpcEnv } from './ipc-protocol';
+import process from "node:process";
 
 export interface ResolvedIPCConnectionOptions {
     readonly serverName: string

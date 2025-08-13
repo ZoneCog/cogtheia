@@ -22,6 +22,7 @@ import { Readable, Writable } from 'stream';
 import { exec } from 'child_process';
 import * as fs from 'fs';
 import { IProcessStartEvent, IProcessExitEvent, ProcessErrorEvent, ProcessType, ManagedProcessManager, ManagedProcess } from '../common/process-manager-types';
+import process from "node:process";
 export { IProcessStartEvent, IProcessExitEvent, ProcessErrorEvent, ProcessType };
 
 /**

@@ -18,6 +18,7 @@ import { BackendApplicationContribution } from '@theia/core/lib/node';
 import { BackendApplicationConfigProvider } from '@theia/core/lib/node/backend-application-config-provider';
 import { injectable } from '@theia/core/shared/inversify';
 import { WebviewExternalEndpoint } from '../common/webview-protocol';
+import process from "node:process";
 
 @injectable()
 export class WebviewBackendSecurityWarnings implements BackendApplicationContribution {

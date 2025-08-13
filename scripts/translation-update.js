@@ -1,3 +1,4 @@
+import process from "node:process";
 const cp = require('child_process');
 
 console.log('Extracting all localization calls...');

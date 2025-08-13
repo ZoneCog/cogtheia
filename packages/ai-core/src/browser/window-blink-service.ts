@@ -78,7 +78,7 @@ export class WindowBlinkService {
                 if (theiaCoreAPI?.focusWindow) {
                     theiaCoreAPI.focusWindow();
                 } else {
-                    window.focus();
+                    globalThis.focus();
                 }
             } catch (error) {
                 console.debug('Could not focus hidden window:', error);
@@ -128,14 +128,14 @@ export class WindowBlinkService {
 
     private focusWindow(): void {
         try {
-            window.focus();
+            globalThis.focus();
 
             // Try to scroll to top to create some visual movement
             if (document.body.scrollTop > 0 || document.documentElement.scrollTop > 0) {
                 const currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
-                window.scrollTo(0, 0);
+                globalThis.scrollTo(0, 0);
                 setTimeout(() => {
-                    window.scrollTo(0, currentScroll);
+                    globalThis.scrollTo(0, currentScroll);
                 }, 100);
             }
         } catch (error) {

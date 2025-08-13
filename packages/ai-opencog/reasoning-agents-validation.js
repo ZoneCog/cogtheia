@@ -28,6 +28,7 @@
  * - Learning and adaptation features
  */
 
+import process from "node:process";
 console.log('🧠 Starting Reasoning Agents Validation...\n');
 
 // Mock OpenCog Service for validation

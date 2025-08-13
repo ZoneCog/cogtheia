@@ -28,6 +28,8 @@ import { Deferred } from '../common/promise-util';
 import { environment } from '../common/index';
 import { AddressInfo } from 'net';
 import { ProcessUtils } from './process-utils';
+import process from "node:process";
+import { Buffer } from "node:buffer";
 
 /**
  * The path to the application project directory. This is the directory where the application code is located.

@@ -18,6 +18,7 @@ import { BackendApplicationContribution } from '@theia/core/lib/node';
 import { BackendApplicationConfigProvider } from '@theia/core/lib/node/backend-application-config-provider';
 import { injectable } from '@theia/core/shared/inversify';
 import { MiniBrowserEndpoint } from '../common/mini-browser-endpoint';
+import process from "node:process";
 
 @injectable()
 export class MiniBrowserBackendSecurityWarnings implements BackendApplicationContribution {

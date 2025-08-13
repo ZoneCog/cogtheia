@@ -49,7 +49,7 @@ export class DefaultWindowService implements WindowService, FrontendApplicationC
     }
 
     openNewWindow(url: string): undefined {
-        window.open(url, undefined, 'noopener');
+        globalThis.open(url, undefined, 'noopener');
         return undefined;
     }
 
@@ -58,7 +58,7 @@ export class DefaultWindowService implements WindowService, FrontendApplicationC
     }
 
     focus(): void {
-        window.focus();
+        globalThis.focus();
     }
 
     /**
@@ -95,12 +95,12 @@ export class DefaultWindowService implements WindowService, FrontendApplicationC
      * Implement the mechanism to detect unloading of the page.
      */
     protected registerUnloadListeners(): void {
-        window.addEventListener('beforeunload', event => this.handleBeforeUnloadEvent(event));
+        globalThis.addEventListener('beforeunload', event => this.handleBeforeUnloadEvent(event));
         // In a browser, `unload` is correctly fired when the page unloads, unlike Electron.
         // If `beforeunload` is cancelled, the user will be prompted to leave or stay.
         // If the user stays, the page won't be unloaded, so `unload` is not fired.
         // If the user leaves, the page will be unloaded, so `unload` is fired.
-        window.addEventListener('unload', () => this.onUnloadEmitter.fire());
+        globalThis.addEventListener('unload', () => this.onUnloadEmitter.fire());
     }
 
     async isSafeToShutDown(stopReason: StopReason): Promise<boolean> {

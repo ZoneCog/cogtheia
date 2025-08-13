@@ -19,6 +19,7 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { LanguageModelV1 } from '@ai-sdk/provider';
 import { injectable } from '@theia/core/shared/inversify';
 import { VercelAiModelDescription } from '../common';
+import process from "node:process";
 
 export type VercelAiProvider = 'openai' | 'anthropic';
 

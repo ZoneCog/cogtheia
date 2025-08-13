@@ -392,7 +392,7 @@ delete window.frameElement;
             }
 
             isHandlingScroll = true;
-            window.requestAnimationFrame(() => {
+            globalThis.requestAnimationFrame(() => {
                 try {
                     host.postMessage('did-scroll', progress);
                 } catch (e) {
@@ -677,6 +677,6 @@ delete window.frameElement;
     if (typeof module !== 'undefined') {
         module.exports = createWebviewManager;
     } else {
-        window.createWebviewManager = createWebviewManager;
+        globalThis.createWebviewManager = createWebviewManager;
     }
 }());

@@ -16,6 +16,7 @@
 
 import * as chai from 'chai';
 import { EnvironmentUtils } from './environment-utils';
+import process from "node:process";
 
 const expect = chai.expect;
 

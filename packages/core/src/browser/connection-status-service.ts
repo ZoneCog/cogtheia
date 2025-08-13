@@ -159,12 +159,12 @@ export class FrontendConnectionStatusService extends AbstractConnectionStatusSer
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     protected setTimeout(handler: (...args: any[]) => void, timeout: number): number {
-        return window.setTimeout(handler, timeout);
+        return globalThis.setTimeout(handler, timeout);
     }
 
     protected clearTimeout(handle?: number): void {
         if (handle !== undefined) {
-            window.clearTimeout(handle);
+            globalThis.clearTimeout(handle);
         }
     }
 }

@@ -34,6 +34,8 @@ import { PassThrough } from 'stream';
 import { exec, execSync } from 'child_process';
 import { DevContainerFileService } from './dev-container-file-service';
 import { ContainerOutputProvider } from '../electron-common/container-output-provider';
+import process from "node:process";
+import { Buffer } from "node:buffer";
 
 @injectable()
 export class DevContainerConnectionProvider implements RemoteContainerConnectionProvider, RpcServer<ContainerOutputProvider> {

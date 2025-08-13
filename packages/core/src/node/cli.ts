@@ -18,6 +18,7 @@ import * as yargs from 'yargs';
 import { inject, named, injectable } from 'inversify';
 import { ContributionProvider } from '../common/contribution-provider';
 import { MaybePromise } from '../common/types';
+import process from "node:process";
 
 export const CliContribution = Symbol('CliContribution');
 

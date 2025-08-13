@@ -43,6 +43,7 @@ import { TheiaRendererAPI } from './electron-api-main';
 import { StopReason } from '../common/frontend-application-state';
 import { dynamicRequire } from '../node/dynamic-require';
 import { ThemeMode } from '../common/theme';
+import process from "node:process";
 
 export { ElectronMainApplicationGlobals };
 

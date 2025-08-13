@@ -211,7 +211,7 @@ export class NotificationManager extends MessageClient {
     protected hideTimeouts = new Map<string, number>();
     protected startHideTimeout(messageId: string, timeout: number): void {
         if (timeout > 0) {
-            this.hideTimeouts.set(messageId, window.setTimeout(() => {
+            this.hideTimeouts.set(messageId, globalThis.setTimeout(() => {
                 this.hideToast(messageId);
             }, timeout));
         }

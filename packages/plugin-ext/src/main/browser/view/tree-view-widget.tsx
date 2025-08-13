@@ -642,7 +642,7 @@ export class TreeViewWidget extends TreeViewWelcomeWidget {
         console.debug(`dragenter ${node.id}`);
         if (ExpandableTreeNode.is(node)) {
             console.debug(`dragenter ${node.id} starting timeout`);
-            this.expansionTimeouts.set(node.id, window.setTimeout(() => {
+            this.expansionTimeouts.set(node.id, globalThis.setTimeout(() => {
                 console.debug(`dragenter ${node.id} timeout reached`);
                 this.model.expandNode(node);
             }, 500));

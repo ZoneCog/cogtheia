@@ -18,6 +18,7 @@ import { LanguageModelRegistry, LanguageModelStatus } from '@theia/ai-core';
 import { inject, injectable } from '@theia/core/shared/inversify';
 import { HuggingFaceModel } from './huggingface-language-model';
 import { HuggingFaceLanguageModelsManager, HuggingFaceModelDescription } from '../common';
+import process from "node:process";
 
 @injectable()
 export class HuggingFaceLanguageModelsManagerImpl implements HuggingFaceLanguageModelsManager {

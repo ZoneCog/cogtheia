@@ -22,6 +22,7 @@ import { ProcessTerminatedMessage, ProcessTerminateMessage } from './hosted-plug
 import { PluginHostRPC } from './plugin-host-rpc';
 import pluginHostModule from './plugin-host-module';
 import { URI } from '../../plugin/types-impl';
+import process from "node:process";
 
 console.log('PLUGIN_HOST(' + process.pid + ') starting instance');
 

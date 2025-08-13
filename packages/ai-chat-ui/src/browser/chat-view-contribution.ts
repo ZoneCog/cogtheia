@@ -58,7 +58,7 @@ export class ChatViewMenuContribution implements MenuContribution, CommandContri
     registerCommands(commands: CommandRegistry): void {
         commands.registerHandler(CommonCommands.COPY.id, this.commandHandlerFactory({
             execute: (...args: unknown[]) => {
-                if (window.getSelection()?.type !== 'Range' && containsRequestOrResponseNode(args)) {
+                if (globalThis.getSelection()?.type !== 'Range' && containsRequestOrResponseNode(args)) {
                     this.copyMessage(extractRequestOrResponseNodes(args));
                 } else {
                     this.commandService.executeCommand(CommonCommands.COPY.id);

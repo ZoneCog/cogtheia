@@ -29,6 +29,7 @@ import { TestWebSocketChannelSetup } from '@theia/core/lib/node/messaging/test/t
 import { expect } from 'chai';
 import URI from '@theia/core/lib/common/uri';
 import { StringBufferingStream } from '@theia/terminal/lib/node/buffering-stream';
+import process from "node:process";
 
 // test scripts that we bundle with tasks
 const commandShortRunning = './task';

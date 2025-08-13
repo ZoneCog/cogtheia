@@ -15,6 +15,7 @@
 // *****************************************************************************
 // @ts-check
 
+import process from "node:process";
 const path = require('path');
 const chalk = require('chalk').default;
 const cp = require('child_process');

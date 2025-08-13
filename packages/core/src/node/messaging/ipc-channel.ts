@@ -21,6 +21,7 @@ import { Duplex } from 'stream';
 import { AbstractChannel, Disposable, WriteBuffer } from '../../common';
 import { Uint8ArrayReadBuffer, Uint8ArrayWriteBuffer } from '../../common/message-rpc/uint8-array-message-buffer';
 import { BinaryMessagePipe } from './binary-message-pipe';
+import process from "node:process";
 
 /**
  * A {@link Channel} to send messages between two processes using a dedicated pipe/fd for binary messages.

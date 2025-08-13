@@ -17,6 +17,7 @@
 
 /* eslint-disable max-len */
 
+import process from "node:process";
 const path = require('path');
 
 /**

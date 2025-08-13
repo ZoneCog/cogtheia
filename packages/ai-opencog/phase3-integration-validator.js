@@ -6,6 +6,7 @@
  * Simple test runner to validate Phase 3 completion without requiring full Theia build
  */
 
+import process from "node:process";
 const path = require('path');
 
 // Mock implementations for the test validation

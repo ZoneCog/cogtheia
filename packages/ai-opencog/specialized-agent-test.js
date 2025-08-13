@@ -23,6 +23,7 @@
  * problem-solving approaches.
  */
 
+import process from "node:process";
 const { MockOpenCogService, MockKnowledgeService } = require('./reasoning-agents-validation.js');
 
 console.log('🔬 Starting Specialized Problem-Solving Agent Tests...\n');

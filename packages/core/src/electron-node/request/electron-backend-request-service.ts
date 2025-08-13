@@ -17,6 +17,7 @@
 import { decorate, injectable } from 'inversify';
 import { NodeRequestOptions, NodeRequestService } from '@theia/request/lib/node-request-service';
 import { ElectronSecurityToken } from '../../electron-common/electron-token';
+import process from "node:process";
 
 decorate(injectable(), NodeRequestService);
 

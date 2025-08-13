@@ -19,6 +19,7 @@ import * as path from 'path';
 import { glob } from 'glob';
 import { create as logUpdater } from 'log-update';
 import * as chalk from 'chalk';
+import process from "node:process";
 
 const NODE_MODULES = 'node_modules';
 const PACKAGE_JSON = 'package.json';

@@ -17,6 +17,7 @@
 import { injectable } from '@theia/core/shared/inversify';
 import { Argv, Arguments } from '@theia/core/shared/yargs';
 import { CliContribution } from '@theia/core/lib/node';
+import process from "node:process";
 
 let pluginHostTerminateTimeout = 10 * 1000;
 if (process.env.PLUGIN_HOST_TERMINATE_TIMEOUT) {

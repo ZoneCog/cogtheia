@@ -23,7 +23,7 @@ import { DefaultTheme } from '@theia/application-package/lib/application-props';
 export class ThemePreloadContribution implements PreloadContribution {
 
     initialize(): void {
-        const dark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+        const dark = globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches;
         const value = window.localStorage.getItem(DEFAULT_BACKGROUND_COLOR_STORAGE_KEY) || DefaultTheme.defaultBackgroundColor(dark);
         document.documentElement.style.setProperty('--theia-editor-background', value);
     }

@@ -53,8 +53,8 @@ export class LocalStorageService implements StorageService {
 
     @postConstruct()
     protected init(): void {
-        if (typeof window !== 'undefined' && window.localStorage) {
-            this.storage = window.localStorage;
+        if (typeof window !== 'undefined' && globalThis.localStorage) {
+            this.storage = globalThis.localStorage;
             this.testLocalStorage();
         } else {
             this.logger.warn(log => log("The browser doesn't support localStorage. state will not be persisted across sessions."));

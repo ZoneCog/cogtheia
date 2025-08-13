@@ -15,6 +15,7 @@
 // *****************************************************************************
 
 // eslint-disable-next-line no-var, @typescript-eslint/no-explicit-any
+import process from "node:process";
 declare var v8debug: any;
 function isInDebugMode(): boolean {
     if (typeof v8debug === 'object') {

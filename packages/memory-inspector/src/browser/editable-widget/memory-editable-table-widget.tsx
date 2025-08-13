@@ -27,6 +27,7 @@ import { MemoryWidget } from '../memory-widget/memory-widget';
 import { EasilyMappedObject } from '../utils/memory-hover-renderer';
 import { Constants, Interfaces } from '../utils/memory-widget-utils';
 import { nls } from '@theia/core/lib/common/nls';
+import { Buffer } from "node:buffer";
 
 export type EditableMemoryWidget = MemoryWidget<MemoryOptionsWidget, MemoryEditableTableWidget>;
 export namespace EditableMemoryWidget {
@@ -241,7 +242,7 @@ export class MemoryEditableTableWidget extends MemoryTableWidget {
         }
         this.writeErrorInfo = { location, error };
         this.update();
-        this.currentErrorTimeout = window.setTimeout(() => this.hideWriteError(), Constants.ERROR_TIMEOUT);
+        this.currentErrorTimeout = globalThis.setTimeout(() => this.hideWriteError(), Constants.ERROR_TIMEOUT);
     }
 
     protected hideWriteError(): void {

@@ -18,6 +18,7 @@ import { injectable, inject } from 'inversify';
 import { ApplicationServer, ExtensionInfo, ApplicationInfo } from '../common/application-protocol';
 import { ApplicationPackage } from '@theia/application-package';
 import { OS } from '../common/os';
+import process from "node:process";
 
 @injectable()
 export class ApplicationServerImpl implements ApplicationServer {

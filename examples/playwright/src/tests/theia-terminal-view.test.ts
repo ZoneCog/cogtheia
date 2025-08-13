@@ -20,6 +20,7 @@ import { TheiaApp } from '../theia-app';
 import { TheiaAppLoader } from '../theia-app-loader';
 import { TheiaWorkspace } from '../theia-workspace';
 import { TheiaTerminal } from '../theia-terminal';
+import process from "node:process";
 
 let app: TheiaApp;
 

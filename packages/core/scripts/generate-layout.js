@@ -14,6 +14,7 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
+import process from "node:process";
 const parseArgs = require('minimist');
 const nativeKeymap = require('native-keymap');
 const fs = require('fs');

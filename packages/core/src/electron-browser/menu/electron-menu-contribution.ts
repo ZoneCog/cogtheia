@@ -136,7 +136,7 @@ export class ElectronMenuContribution extends BrowserMenuBarContribution impleme
         const disposeHandler = window.electronTheiaCore.onWindowEvent('focus', () => {
             this.setMenu(app);
         });
-        window.addEventListener('unload', () => disposeHandler.dispose());
+        globalThis.addEventListener('unload', () => disposeHandler.dispose());
     }
 
     protected attachMenuBarVisibilityListener(): void {
@@ -419,7 +419,7 @@ export class ElectronMenuContribution extends BrowserMenuBarContribution impleme
     }
 
     protected handleThemeChange(e: ThemeChangeEvent): void {
-        const backgroundColor = window.getComputedStyle(document.body).backgroundColor;
+        const backgroundColor = globalThis.getComputedStyle(document.body).backgroundColor;
         window.electronTheiaCore.setBackgroundColor(backgroundColor);
         window.electronTheiaCore.setTheme(getThemeMode(e.newTheme.type));
     }

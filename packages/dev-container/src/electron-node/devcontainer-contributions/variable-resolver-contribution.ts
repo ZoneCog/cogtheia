@@ -16,6 +16,7 @@
 
 import { inject, injectable, interfaces, LazyServiceIdentifier } from '@theia/core/shared/inversify';
 import { DockerContainerService } from '../docker-container-service';
+import process from "node:process";
 
 export const VariableResolverContribution = Symbol('VariableResolverContribution');
 export interface VariableResolverContribution {

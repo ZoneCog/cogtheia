@@ -16,6 +16,7 @@
 
 import * as cp from 'child_process';
 import { injectable } from 'inversify';
+import process from "node:process";
 
 /**
  * `@theia/core` service with some process-related utilities.

@@ -19,6 +19,7 @@
 import * as net from 'net';
 import * as puppeteer from 'puppeteer-core';
 import newTestPage, { TestFileOptions } from './test-page';
+import process from "node:process";
 
 export interface TestOptions {
     start: () => Promise<net.AddressInfo>

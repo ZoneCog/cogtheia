@@ -21,6 +21,7 @@ import { DebugProtocol } from '@vscode/debugprotocol';
 import { Interfaces } from '../utils/memory-widget-utils';
 import { VariableRange } from '../utils/memory-widget-variable-utils';
 import Long from 'long';
+import { Buffer } from "node:buffer";
 
 export const MemoryProvider = Symbol('MemoryProvider');
 /**

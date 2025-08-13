@@ -18,6 +18,7 @@ import cp = require('child_process');
 import fs = require('fs');
 import path = require('path');
 import { PackageJson, parseModule, ReExportJson } from './utility';
+import process from "node:process";
 
 export async function readJson<T = unknown>(jsonPath: string): Promise<T> {
     return JSON.parse(await fs.promises.readFile(jsonPath, 'utf8')) as T;

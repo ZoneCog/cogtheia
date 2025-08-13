@@ -19,6 +19,7 @@ import * as path from 'path';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import type { RawSourceMap } from 'source-map';
 import { ApplicationPackage } from '@theia/application-package/lib/application-package';
+import process from "node:process";
 
 const modulePackages: { dir: string, name?: string }[] = [];
 for (const extensionPackage of new ApplicationPackage({ projectPath: process.cwd() }).extensionPackages) {

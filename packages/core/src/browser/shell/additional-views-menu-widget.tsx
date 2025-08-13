@@ -61,7 +61,7 @@ export class AdditionalViewsMenuWidget extends SidebarMenuWidget {
         const command: Command = { id: `reveal.${title.label}.${index}`, label: title.label };
         this.menuDisposables.push(this.commandRegistry.registerCommand(command, {
             execute: () => {
-                window.requestAnimationFrame(() => {
+                globalThis.requestAnimationFrame(() => {
                     sender.currentIndex = sender.titles.indexOf(title);
                 });
             }

@@ -25,6 +25,7 @@ import { messagingBackendModule } from '@theia/core/lib/node/messaging/messaging
 import { ApplicationPackage } from '@theia/core/shared/@theia/application-package';
 import { TerminalProcess } from '@theia/process/lib/node';
 import { ProcessUtils } from '@theia/core/lib/node/process-utils';
+import process from "node:process";
 
 export function createTaskTestContainer(): Container {
     const testContainer = new Container();

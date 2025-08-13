@@ -23,6 +23,7 @@ import { Container } from 'inversify';
 import { bindPreferenceService } from '../frontend-application-bindings';
 import { PreferenceSchemaProperties, PreferenceSchemaProvider } from './preference-contribution';
 import { FrontendApplicationConfigProvider } from '../frontend-application-config-provider';
+import process from "node:process";
 
 disableJSDOM();
 

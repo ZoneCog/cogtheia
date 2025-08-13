@@ -15,6 +15,7 @@
 // *****************************************************************************
 
 import { Event } from '@theia/core';
+import process from "node:process";
 
 export interface ManagedProcessManager {
     register(process: ManagedProcess): number;

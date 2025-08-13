@@ -15,6 +15,7 @@
 // *****************************************************************************
 // @ts-check
 
+import process from "node:process";
 if (process.argv.indexOf('--reject-cycles') === -1) {
     process.argv.push('--reject-cycles');
 }

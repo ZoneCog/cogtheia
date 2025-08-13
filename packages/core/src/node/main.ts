@@ -19,6 +19,7 @@ import * as https from 'https';
 import { AddressInfo } from 'net';
 import { checkParentAlive } from './messaging/ipc-protocol';
 import { MaybePromise } from '../common/types';
+import process from "node:process";
 
 checkParentAlive();
 

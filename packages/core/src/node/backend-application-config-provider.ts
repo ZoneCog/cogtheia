@@ -33,14 +33,14 @@ export class BackendApplicationConfigProvider {
             throw new Error('The configuration is already set.');
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const globalObject = global as any;
+        const globalObject = globalThis as any;
         const key = BackendApplicationConfigProvider.KEY;
         globalObject[key] = deepmerge(BackendApplicationConfig.DEFAULT, config);
     }
 
     private static doGet(): BackendApplicationConfig | undefined {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const globalObject = global as any;
+        const globalObject = globalThis as any;
         const key = BackendApplicationConfigProvider.KEY;
         return globalObject[key];
     }

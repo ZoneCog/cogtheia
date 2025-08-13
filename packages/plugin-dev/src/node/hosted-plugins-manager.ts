@@ -22,6 +22,7 @@ import * as path from 'path';
 import { FileUri } from '@theia/core/lib/node';
 import { HostedPluginSupport } from '@theia/plugin-ext/lib/hosted/node/hosted-plugin';
 import { LogType } from '@theia/plugin-ext/lib/common/types';
+import process from "node:process";
 
 export const HostedPluginsManager = Symbol('HostedPluginsManager');
 

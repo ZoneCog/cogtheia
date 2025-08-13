@@ -27,6 +27,7 @@ import { WsRequestValidatorContribution } from '@theia/core/lib/node/ws-request-
 import { MaybePromise } from '@theia/core/lib/common';
 import { ApplicationPackage } from '@theia/core/shared/@theia/application-package';
 import { BackendRemoteService } from '@theia/core/lib/node/remote/backend-remote-service';
+import process from "node:process";
 
 @injectable()
 export class PluginApiContribution implements BackendApplicationContribution, WsRequestValidatorContribution {

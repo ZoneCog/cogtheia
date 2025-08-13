@@ -30,6 +30,7 @@ import { PreferenceScope } from './preference-scope';
 import { PreferenceProvider } from './preference-provider';
 import { FrontendApplicationConfigProvider } from '../frontend-application-config-provider';
 import { createPreferenceProxy, PreferenceChangeEvent } from './preference-proxy';
+import process from "node:process";
 
 disableJSDOM();
 

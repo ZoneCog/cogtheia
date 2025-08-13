@@ -18,6 +18,7 @@ import { ElectronMainApplication, ElectronMainApplicationContribution } from '@t
 import { ElectronSecurityTokenService } from '@theia/core/lib/electron-main/electron-security-token-service';
 import { inject, injectable } from '@theia/core/shared/inversify';
 import { MiniBrowserEndpoint } from '../common/mini-browser-endpoint';
+import process from "node:process";
 
 /**
  * Since the mini-browser might serve content from a new origin,

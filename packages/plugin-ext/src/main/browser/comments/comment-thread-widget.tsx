@@ -528,7 +528,7 @@ export class ReviewComment<P extends ReviewComment.Props = ReviewComment.Props> 
 
     protected detectHover = (element: HTMLElement | null) => {
         if (element) {
-            window.requestAnimationFrame(() => {
+            globalThis.requestAnimationFrame(() => {
                 const hover = element.matches(':hover');
                 this.setState({ hover });
             });

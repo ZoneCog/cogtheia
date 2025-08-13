@@ -18,6 +18,7 @@ import { LanguageModelRegistry, LanguageModelStatus, TokenUsageService } from '@
 import { inject, injectable } from '@theia/core/shared/inversify';
 import { AnthropicModel, DEFAULT_MAX_TOKENS } from './anthropic-language-model';
 import { AnthropicLanguageModelsManager, AnthropicModelDescription } from '../common';
+import process from "node:process";
 
 @injectable()
 export class AnthropicLanguageModelsManagerImpl implements AnthropicLanguageModelsManager {

@@ -16,6 +16,7 @@
 
 import { Disposable, Event } from '@theia/core';
 import * as net from 'net';
+import { Buffer } from "node:buffer";
 
 export type RemoteStatusReport = (message: string) => void;
 

@@ -39,6 +39,7 @@ import { TaskConfiguration } from '../../common/task-protocol';
 import { ProcessTaskError, CommandOptions } from '../../common/process/task-protocol';
 import * as fs from 'fs';
 import { ShellProcess } from '@theia/terminal/lib/node/shell-process';
+import process from "node:process";
 
 export interface OsSpecificCommand {
     command: string,

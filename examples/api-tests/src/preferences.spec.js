@@ -25,7 +25,7 @@ describe('Preferences', function () {
     const { PreferenceLanguageOverrideService } = require('@theia/core/lib/browser/preferences/preference-language-override-service');
     const { MonacoTextModelService } = require('@theia/monaco/lib/browser/monaco-text-model-service');
     const { PreferenceSchemaProvider } = require('@theia/core/lib/browser/preferences/preference-contribution')
-    const { container } = window.theia;
+    const { container } = globalThis.theia;
     /** @type {import ('@theia/core/lib/browser/preferences/preference-service').PreferenceService} */
     const preferenceService = container.get(PreferenceService);
     /** @type {import ('@theia/core/lib/browser/preferences/preference-language-override-service').PreferenceLanguageOverrideService} */

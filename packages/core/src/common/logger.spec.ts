@@ -21,7 +21,7 @@ import { setRootLogger, unsetRootLogger } from './logger';
 describe('logger', () => {
 
     it('window is not defined', () => {
-        expect(() => { window; }).to.throw(ReferenceError, /window is not defined/);
+        expect(() => { globalThis; }).to.throw(ReferenceError, /window is not defined/);
     });
 
     it('window is not defined when converting to boolean', () => {

@@ -531,7 +531,7 @@ export class CellOutputWebviewImpl implements CellOutputWebview, Disposable {
                 break;
             case 'webviewFocusChanged':
                 if (message.focused) {
-                    window.getSelection()?.empty();
+                    globalThis.getSelection()?.empty();
                 }
                 this.contextKeyService.setContext(NOTEBOOK_OUTPUT_FOCUSED, message.focused);
                 break;

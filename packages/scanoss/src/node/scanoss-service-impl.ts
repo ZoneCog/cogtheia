@@ -18,6 +18,7 @@ import { injectable } from '@theia/core/shared/inversify';
 import { ScanOSSResult, ScanOSSService } from '../common';
 
 import { Scanner, ScannerCfg, ScannerComponent } from 'scanoss';
+import process from "node:process";
 
 // Define our own type of what is actually returned by the scanner
 interface ScanOSSScanner {

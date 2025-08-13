@@ -16,6 +16,7 @@
 // *****************************************************************************
 
 import { Channel } from '../../common/message-rpc/channel';
+import process from "node:process";
 
 const THEIA_PARENT_PID = 'THEIA_PARENT_PID';
 const THEIA_ENTRY_POINT = 'THEIA_ENTRY_POINT';

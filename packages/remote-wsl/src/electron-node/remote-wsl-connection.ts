@@ -20,6 +20,7 @@ import { Socket } from 'net';
 import { exec, spawn } from 'child_process';
 import { Deferred } from '@theia/core/lib/common/promise-util';
 import * as fs from 'fs';
+import { Buffer } from "node:buffer";
 
 export interface RemoteWslConnectionOptions {
     id: string;

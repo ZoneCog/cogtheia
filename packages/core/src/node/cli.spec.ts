@@ -19,6 +19,7 @@ import * as chai from 'chai';
 import { CliManager, CliContribution } from './cli';
 import { Deferred } from '../common/promise-util';
 import { MaybePromise } from '../common/types';
+import process from "node:process";
 
 class TestCliManager extends CliManager {
     constructor(...contribs: CliContribution[]) {

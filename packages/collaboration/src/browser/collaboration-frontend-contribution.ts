@@ -32,7 +32,7 @@ import { FrontendApplicationConfigProvider } from '@theia/core/lib/browser/front
 import { PreferenceService } from '@theia/core/lib/browser';
 
 initializeProtocol({
-    cryptoModule: window.crypto
+    cryptoModule: globalThis.crypto
 });
 
 export const COLLABORATION_CATEGORY = 'Collaboration';

@@ -20,6 +20,7 @@ import {
     Repository, WorkingDirectoryStatus, Branch, GitResult, GitError, GitFileStatus,
     GitFileChange, CommitWithChanges, GitFileBlame, Remote as RemoteModel, StashEntry
 } from './git-model';
+import process from "node:process";
 
 /**
  * The WS endpoint path to the Git service.

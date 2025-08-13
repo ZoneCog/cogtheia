@@ -30,6 +30,7 @@ import {
 import { URI } from '@theia/core';
 import { MultiKeyMap } from '@theia/core/lib/common/collections';
 import { MarkdownString } from '@theia/core/lib/common/markdown-rendering/markdown-string';
+import { Buffer } from "node:buffer";
 
 interface SerializedExtensionEnvironmentVariableCollection {
     extensionIdentifier: string,

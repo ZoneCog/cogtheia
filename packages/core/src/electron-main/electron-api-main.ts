@@ -61,6 +61,7 @@ import {
 import { ElectronMainApplication, ElectronMainApplicationContribution } from './electron-main-application';
 import { Disposable, DisposableCollection, isOSX, MaybePromise } from '../common';
 import { createDisposableListener } from './event-utils';
+import process from "node:process";
 
 @injectable()
 export class TheiaMainApi implements ElectronMainApplicationContribution {

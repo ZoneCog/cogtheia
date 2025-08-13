@@ -885,7 +885,7 @@ export class ScrollableTabBar extends TabBar<Widget> {
         }
         const result = new Promise<void>((resolve, reject) => {
             // The tab might not have been created yet, so wait until the next frame
-            window.requestAnimationFrame(() => {
+            globalThis.requestAnimationFrame(() => {
                 const tab = this.contentNode.children[index] as HTMLElement;
                 if (tab && this.isVisible) {
                     const parent = this.contentContainer;
@@ -1165,7 +1165,7 @@ export class SideTabBar extends ScrollableTabBar {
         }
         const result = new Promise<void>(resolve => {
             // The tab might not have been created yet, so wait until the next frame
-            window.requestAnimationFrame(() => {
+            globalThis.requestAnimationFrame(() => {
                 if (this.tabsOverflowData && index >= this.tabsOverflowData.startIndex) {
                     const title = this.titles[index];
                     this.insertTab(this.tabsOverflowData.startIndex - 1, title);
@@ -1190,14 +1190,14 @@ export class SideTabBar extends ScrollableTabBar {
             // Render into the invisible node
             this.renderTabs(this.hiddenContentNode);
             // Await a rendering frame
-            window.requestAnimationFrame(() => {
+            globalThis.requestAnimationFrame(() => {
                 const hiddenContent = this.hiddenContentNode;
                 const n = hiddenContent.children.length;
                 const renderData = new Array<Partial<SideBarRenderData>>(n);
                 for (let i = 0; i < n; i++) {
                     const hiddenTab = hiddenContent.children[i];
                     // Extract tab padding, and margin from the computed style
-                    const tabStyle = window.getComputedStyle(hiddenTab);
+                    const tabStyle = globalThis.getComputedStyle(hiddenTab);
                     const rd: Partial<SideBarRenderData> = {
                         paddingTop: parseFloat(tabStyle.paddingTop!),
                         paddingBottom: parseFloat(tabStyle.paddingBottom!)
@@ -1226,7 +1226,7 @@ export class SideTabBar extends ScrollableTabBar {
 
     protected computeOverflowingTabsData(): void {
         // ensure that render tabs has completed
-        window.requestAnimationFrame(() => {
+        globalThis.requestAnimationFrame(() => {
             const startIndex = this.hideOverflowingTabs();
             if (startIndex === -1) {
                 if (this.tabsOverflowData) {

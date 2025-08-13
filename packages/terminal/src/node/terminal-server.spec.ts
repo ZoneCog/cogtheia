@@ -17,6 +17,7 @@
 import * as chai from 'chai';
 import { createTerminalTestContainer } from './test/terminal-test-container';
 import { ITerminalServer } from '../common/terminal-protocol';
+import process from "node:process";
 
 /**
  * Globals

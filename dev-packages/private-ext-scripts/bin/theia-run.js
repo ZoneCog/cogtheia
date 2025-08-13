@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 // @ts-check
+import process from "node:process";
 const path = require('path');
 
 // See: https://github.com/eclipse-theia/theia/issues/8779#issuecomment-733747340

@@ -27,6 +27,7 @@ import { OVSXApiFilterProvider, VSXExtensionRaw, VSXTargetPlatform } from '@thei
 import { RequestService } from '@theia/core/shared/@theia/request';
 import { PluginVSCodeEnvironment } from '@theia/plugin-ext-vscode/lib/common/plugin-vscode-environment';
 import { PluginUninstallationManager } from '@theia/plugin-ext/lib/main/node/plugin-uninstallation-manager';
+import process from "node:process";
 
 @injectable()
 export class VSXExtensionResolver implements PluginDeployerResolver {

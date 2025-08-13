@@ -27,6 +27,7 @@ import { ContributionProvider } from '@theia/core/lib/common/contribution-provid
 import { BackendApplicationContribution } from '@theia/core/lib/node/backend-application';
 import { MiniBrowserService } from '../common/mini-browser-service';
 import { MiniBrowserEndpoint as MiniBrowserEndpointNS } from '../common/mini-browser-endpoint';
+import process from "node:process";
 
 /**
  * The return type of the `FileSystem#resolveContent` method.

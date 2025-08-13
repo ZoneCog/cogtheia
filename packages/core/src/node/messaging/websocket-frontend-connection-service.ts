@@ -26,6 +26,7 @@ import { BackendApplicationConfigProvider } from '../backend-application-config-
 import { WebsocketEndpoint } from './websocket-endpoint';
 import { ConnectionManagementMessages } from '../../common/messaging/connection-management';
 import { Disposable, DisposableCollection } from '../../common';
+import process from "node:process";
 
 @injectable()
 export class WebsocketFrontendConnectionService implements FrontendConnectionService {

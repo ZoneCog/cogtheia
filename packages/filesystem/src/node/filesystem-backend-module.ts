@@ -31,6 +31,7 @@ import { EncodingService } from '@theia/core/lib/common/encoding-service';
 import { BackendApplicationContribution, IPCConnectionProvider } from '@theia/core/lib/node';
 import { RpcProxyFactory, ConnectionErrorHandler } from '@theia/core';
 import { FileSystemWatcherServiceDispatcher } from './filesystem-watcher-dispatcher';
+import process from "node:process";
 
 export const WATCHER_SINGLE_THREADED = process.argv.includes('--no-cluster');
 export const WATCHER_VERBOSE = process.argv.includes('--watcher-verbose');

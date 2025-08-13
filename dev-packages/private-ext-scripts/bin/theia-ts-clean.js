@@ -18,6 +18,7 @@
 
 // @ts-check
 
+import process from "node:process";
 const _glob = require('glob');
 const debug = require('debug')('ts-clean');
 const fs = require('fs');

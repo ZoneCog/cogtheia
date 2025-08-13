@@ -15,6 +15,7 @@ import { Deferred } from '@theia/core/lib/common/promise-util';
 import { GitPrompt } from '../../common/git-prompt';
 import { DugiteGitPromptServer } from '../../node/dugite-git-prompt';
 import { AddressInfo } from 'net';
+import process from "node:process";
 
 /**
  * Environment for the Git askpass helper.

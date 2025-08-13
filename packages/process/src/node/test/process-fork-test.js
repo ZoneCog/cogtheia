@@ -14,6 +14,7 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
+import process from "node:process";
 if (process.argv[2] === 'version') {
     console.log('1.0.0');
 } else {

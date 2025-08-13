@@ -19,6 +19,7 @@ import * as http from 'http';
 import { injectable, postConstruct } from '@theia/core/shared/inversify';
 import * as url from 'url';
 import { MiniBrowserEndpoint } from '../common/mini-browser-endpoint';
+import process from "node:process";
 
 /**
  * Prevents explicit WebSocket connections from the mini-browser virtual host.

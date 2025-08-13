@@ -18,6 +18,7 @@ import { LanguageModelRegistry, LanguageModelStatus, TokenUsageService } from '@
 import { inject, injectable } from '@theia/core/shared/inversify';
 import { OpenAiModel, OpenAiModelUtils } from './openai-language-model';
 import { OpenAiLanguageModelsManager, OpenAiModelDescription } from '../common';
+import process from "node:process";
 
 @injectable()
 export class OpenAiLanguageModelsManagerImpl implements OpenAiLanguageModelsManager {

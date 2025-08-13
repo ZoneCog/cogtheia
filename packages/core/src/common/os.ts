@@ -14,6 +14,7 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
+import process from "node:process";
 function is(userAgent: string, platform: string): boolean {
     if (typeof navigator !== 'undefined') {
         if (navigator.userAgent && navigator.userAgent.indexOf(userAgent) >= 0) {

@@ -69,7 +69,7 @@ export default async function newTestPage(options: TestPageOptions): Promise<pup
         theiaLoaded = true;
         page.addScriptTag({ path: require.resolve('chai/chai.js') });
         page.evaluate(() =>
-            window.addEventListener('beforeunload', () => (window as any)['fireDidUnloadTheia']())
+            globalThis.addEventListener('beforeunload', () => (window as any)['fireDidUnloadTheia']())
         );
     };
     page.on('frameattached', preLoad);

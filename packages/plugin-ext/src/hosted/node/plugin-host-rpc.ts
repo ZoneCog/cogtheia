@@ -43,6 +43,7 @@ import { LocalizationExtImpl } from '../../plugin/localization-ext';
 import { RPCProtocol, ProxyIdentifier } from '../../common/rpc-protocol';
 import { PluginApiCache } from '../../plugin/node/plugin-container-module';
 import { overridePluginDependencies } from './plugin-require-override';
+import process from "node:process";
 
 /**
  * The full set of all possible `Ext` interfaces that a plugin manager can support.

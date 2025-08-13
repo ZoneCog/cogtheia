@@ -168,7 +168,7 @@ export class SelectComponent extends React.Component<SelectComponentProps, Selec
         }
 
         for (const [key, listener] of this.mountedListeners.entries()) {
-            window.addEventListener(key, listener);
+            globalThis.addEventListener(key, listener);
         }
     }
 
@@ -181,7 +181,7 @@ export class SelectComponent extends React.Component<SelectComponentProps, Selec
                 parent = parent.parentElement;
             }
             for (const [key, listener] of this.mountedListeners.entries()) {
-                window.removeEventListener(key, listener);
+                globalThis.removeEventListener(key, listener);
             }
         }
     }

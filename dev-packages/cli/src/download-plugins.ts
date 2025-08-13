@@ -25,6 +25,7 @@ import * as temp from 'temp';
 import { DEFAULT_SUPPORTED_API_VERSION } from '@theia/application-package/lib/api';
 import { RequestContext, RequestService } from '@theia/request';
 import { RateLimiter } from 'limiter';
+import process from "node:process";
 import escapeStringRegexp = require('escape-string-regexp');
 
 temp.track();

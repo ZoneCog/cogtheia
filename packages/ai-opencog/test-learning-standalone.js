@@ -3,6 +3,7 @@
  * This tests the core learning algorithms without Theia dependencies
  */
 
+import process from "node:process";
 const crypto = require('crypto');
 // Simplified AtomSpace service for testing core learning logic
 class TestAtomSpaceService {

@@ -18,6 +18,7 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import * as cp from 'child_process';
 import { ApplicationPackage } from '@theia/application-package';
+import process from "node:process";
 
 export class ApplicationProcess {
 

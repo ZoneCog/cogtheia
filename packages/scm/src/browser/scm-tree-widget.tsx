@@ -503,7 +503,7 @@ export abstract class ScmElement<P extends ScmElement.Props = ScmElement.Props> 
 
     protected detectHover = (element: HTMLElement | null) => {
         if (element) {
-            window.requestAnimationFrame(() => {
+            globalThis.requestAnimationFrame(() => {
                 const hover = element.matches(':hover');
                 this.setState({ hover });
             });

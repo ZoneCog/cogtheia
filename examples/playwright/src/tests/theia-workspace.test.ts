@@ -19,6 +19,7 @@ import * as path from 'path';
 import { TheiaAppLoader } from '../theia-app-loader';
 import { DOT_FILES_FILTER, TheiaExplorerView } from '../theia-explorer-view';
 import { TheiaWorkspace } from '../theia-workspace';
+import process from "node:process";
 
 test.describe('Theia Workspace', () => {
     let isElectron: boolean;

@@ -15,6 +15,7 @@
 // *****************************************************************************
 
 import { Emitter, Event } from '@theia/core/lib/common/event';
+import { Buffer } from "node:buffer";
 
 export interface BufferingStreamOptions {
     /**

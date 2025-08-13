@@ -458,7 +458,7 @@ export class ApplicationShell extends Widget {
         if (state) {
             state.lastDragOver = event;
             if (state.leaveTimeout) {
-                window.clearTimeout(state.leaveTimeout);
+                globalThis.clearTimeout(state.leaveTimeout);
                 state.leaveTimeout = undefined;
             }
             const { clientX, clientY } = event;
@@ -526,10 +526,10 @@ export class ApplicationShell extends Widget {
         const state = this.dragState;
         if (state) {
             if (state.leaveTimeout) {
-                window.clearTimeout(state.leaveTimeout);
+                globalThis.clearTimeout(state.leaveTimeout);
             }
             this.dragState = undefined;
-            window.requestAnimationFrame(() => {
+            globalThis.requestAnimationFrame(() => {
                 // Clean up the side panel state in the next frame
                 if (this.leftPanelHandler.dockPanel.isEmpty) {
                     this.leftPanelHandler.collapse();
@@ -549,9 +549,9 @@ export class ApplicationShell extends Widget {
         if (state) {
             state.lastDragOver = undefined;
             if (state.leaveTimeout) {
-                window.clearTimeout(state.leaveTimeout);
+                globalThis.clearTimeout(state.leaveTimeout);
             }
-            state.leaveTimeout = window.setTimeout(() => {
+            state.leaveTimeout = globalThis.setTimeout(() => {
                 this.dragState = undefined;
                 if (state.leftExpanded || this.leftPanelHandler.dockPanel.isEmpty) {
                     this.leftPanelHandler.collapse();
@@ -1409,13 +1409,13 @@ export class ApplicationShell extends Widget {
             }
             const delta = timestamp - start;
             if (delta < this.activationTimeout) {
-                request = window.requestAnimationFrame(step);
+                request = globalThis.requestAnimationFrame(step);
             } else {
                 console.warn(`Widget was activated, but did not accept focus after ${this.activationTimeout}ms: ${widget.id}`);
             }
         };
-        let request = window.requestAnimationFrame(step);
-        this.toDisposeOnActivationCheck.push(Disposable.create(() => window.cancelAnimationFrame(request)));
+        let request = globalThis.requestAnimationFrame(step);
+        this.toDisposeOnActivationCheck.push(Disposable.create(() => globalThis.cancelAnimationFrame(request)));
     }
 
     /**

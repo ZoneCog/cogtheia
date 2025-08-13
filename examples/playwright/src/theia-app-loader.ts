@@ -17,6 +17,7 @@
 import { Page, PlaywrightWorkerArgs, _electron as electron } from '@playwright/test';
 import { TheiaApp } from './theia-app';
 import { TheiaWorkspace } from './theia-workspace';
+import process from "node:process";
 
 export interface TheiaAppFactory<T extends TheiaApp> {
     new(page: Page, initialWorkspace: TheiaWorkspace, isElectron?: boolean): T;

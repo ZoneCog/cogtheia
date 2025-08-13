@@ -1,3 +1,4 @@
+import process from "node:process";
 const {
     compareArrayValues
 } = require('./compare')

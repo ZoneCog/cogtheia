@@ -21,6 +21,7 @@ import { isLocalMCPServerDescription, isRemoteMCPServerDescription, MCPServerDes
 import { Emitter } from '@theia/core/lib/common/event';
 import { CallToolResult, CallToolResultSchema, ListResourcesResult, ReadResourceResult } from '@modelcontextprotocol/sdk/types';
 import { Transport } from '@modelcontextprotocol/sdk/shared/transport';
+import process from "node:process";
 
 export class MCPServer {
     private description: MCPServerDescription;

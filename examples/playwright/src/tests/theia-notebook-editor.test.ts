@@ -21,6 +21,7 @@ import { TheiaAppLoader, TheiaPlaywrightTestConfig } from '../theia-app-loader';
 import { TheiaNotebookCell } from '../theia-notebook-cell';
 import { TheiaNotebookEditor } from '../theia-notebook-editor';
 import { TheiaWorkspace } from '../theia-workspace';
+import process from "node:process";
 
 // See .github/workflows/playwright.yml for preferred python version
 const preferredKernel = process.env.CI ? 'Python 3.11' : 'Python 3';

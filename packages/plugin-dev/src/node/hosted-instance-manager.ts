@@ -31,6 +31,8 @@ import { MetadataScanner } from '@theia/plugin-ext/lib/hosted/node/metadata-scan
 import { PluginDebugConfiguration } from '../common/plugin-dev-protocol';
 import { HostedPluginProcess } from '@theia/plugin-ext/lib/hosted/node/hosted-plugin-process';
 import { isENOENT } from '@theia/plugin-ext/lib/common/errors';
+import process from "node:process";
+import { Buffer } from "node:buffer";
 
 const DEFAULT_HOSTED_PLUGIN_PORT = 3030;
 

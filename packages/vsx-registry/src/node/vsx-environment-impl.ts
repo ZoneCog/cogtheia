@@ -20,6 +20,7 @@ import { OVSXRouterConfig } from '@theia/ovsx-client';
 import { PluginVsCodeCliContribution } from '@theia/plugin-ext-vscode/lib/node/plugin-vscode-cli-contribution';
 import { VSXEnvironment } from '../common/vsx-environment';
 import { VsxCli } from './vsx-cli';
+import process from "node:process";
 
 @injectable()
 export class VSXEnvironmentImpl implements VSXEnvironment {

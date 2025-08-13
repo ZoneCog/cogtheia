@@ -20,6 +20,7 @@ import { basename, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { LlamafileLanguageModel } from '../common/llamafile-language-model';
 import { LlamafileManager, LlamafileModelDescription, LlamafileServerManagerClient } from '../common/llamafile-manager';
+import { Buffer } from "node:buffer";
 
 @injectable()
 export class LlamafileManagerImpl implements LlamafileManager {

@@ -103,7 +103,7 @@ export class FrontendApplication {
             return Promise.resolve(document.body);
         }
         return new Promise<HTMLElement>(resolve =>
-            window.addEventListener('load', () => resolve(document.body), { once: true })
+            globalThis.addEventListener('load', () => resolve(document.body), { once: true })
         );
     }
 
@@ -124,7 +124,7 @@ export class FrontendApplication {
             this.layoutRestorer.storeLayout(this);
             this.stopContributions();
         });
-        window.addEventListener('resize', () => this.shell.update());
+        globalThis.addEventListener('resize', () => this.shell.update());
 
         this.keybindings.registerEventListeners(window);
 
@@ -175,11 +175,11 @@ export class FrontendApplication {
         const startupElem = this.getStartupIndicator(host);
         if (startupElem) {
             return new Promise(resolve => {
-                window.requestAnimationFrame(() => {
+                globalThis.requestAnimationFrame(() => {
                     startupElem.classList.add('theia-hidden');
-                    const preloadStyle = window.getComputedStyle(startupElem);
+                    const preloadStyle = globalThis.getComputedStyle(startupElem);
                     const transitionDuration = parseCssTime(preloadStyle.transitionDuration, 0);
-                    window.setTimeout(() => {
+                    globalThis.setTimeout(() => {
                         const parent = startupElem.parentElement;
                         if (parent) {
                             parent.removeChild(startupElem);

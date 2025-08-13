@@ -21,6 +21,7 @@ import { pathExists } from '@theia/core/shared/fs-extra';
 import { ILogger } from '@theia/core/lib/common/logger';
 import { Disposable, DisposableCollection } from '@theia/core/lib/common/disposable';
 import { MessageService } from '@theia/core';
+import process from "node:process";
 
 /**
  * Initializer hook for Git.

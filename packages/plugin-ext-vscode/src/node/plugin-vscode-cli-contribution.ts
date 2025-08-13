@@ -20,6 +20,7 @@ import { CliContribution } from '@theia/core/lib/node/cli';
 import { PluginHostEnvironmentVariable } from '@theia/plugin-ext/lib/common';
 import { VSCODE_DEFAULT_API_VERSION } from '../common/plugin-vscode-types';
 import { Deferred } from '@theia/core/lib/common/promise-util';
+import process from "node:process";
 
 /**
  * CLI Contribution allowing to override the VS Code API version which is returned by `vscode.version` API call.

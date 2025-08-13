@@ -17,6 +17,7 @@
 import { wait } from '@theia/core/lib/common/promise-util';
 import { expect } from 'chai';
 import { BufferBufferingStream } from './buffering-stream';
+import { Buffer } from "node:buffer";
 
 describe('BufferringStream', () => {
 

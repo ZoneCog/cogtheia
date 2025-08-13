@@ -7,6 +7,7 @@
 
 import * as url from 'url';
 import * as http from 'http';
+import process from "node:process";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function fatal(err: any): void {

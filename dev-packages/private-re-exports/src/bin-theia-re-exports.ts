@@ -22,6 +22,7 @@ import semver = require('semver');
 import yargs = require('yargs');
 import { parseModule } from './utility';
 import { ReExport, PackageReExports } from './package-re-exports';
+import process from "node:process";
 type EOL = '\r\n' | '\n' | '\r';
 
 yargs

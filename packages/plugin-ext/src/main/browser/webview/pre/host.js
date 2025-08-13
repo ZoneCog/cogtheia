@@ -25,9 +25,9 @@
     const hostMessaging = new class HostMessaging {
         constructor() {
             this.handlers = new Map();
-            window.addEventListener('message', e => {
+            globalThis.addEventListener('message', e => {
                 // Note: `window.parent === window` when there is no parent...
-                const sourceIsSelfOrParentFrame = e.source === window.parent;
+                const sourceIsSelfOrParentFrame = e.source === globalThis.parent;
                 let sourceIsChildFrame = false;
                 for (let i = 0; i < window.frames.length; i++) {
                     const frame = window.frames[i];
@@ -121,7 +121,7 @@
         }
     }
 
-    window.createWebviewManager({
+    globalThis.createWebviewManager({
         postMessage: hostMessaging.postMessage.bind(hostMessaging),
         onMessage: hostMessaging.onMessage.bind(hostMessaging),
         ready: workerReady,

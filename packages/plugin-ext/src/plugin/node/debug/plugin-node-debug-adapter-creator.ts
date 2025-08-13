@@ -24,6 +24,7 @@ import { ChildProcess, spawn, fork, ForkOptions } from 'child_process';
 import { DebugAdapter } from '@theia/debug/lib/common/debug-model';
 import { DebugAdapterExecutable, DebugAdapterInlineImplementation, DebugAdapterNamedPipeServer, DebugAdapterServer } from '../../types-impl';
 import { ProcessDebugAdapter, SocketDebugAdapter } from '@theia/debug/lib/node/stream-debug-adapter';
+import process from "node:process";
 const isElectron = require('is-electron');
 
 export class NodeDebugAdapterCreator extends PluginDebugAdapterCreator {

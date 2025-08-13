@@ -15,6 +15,7 @@
 // *****************************************************************************
 
 import { readPackageJson, parsePackageReExports } from './package-re-exports';
+import process from "node:process";
 
 const packageName = process.argv[2].trim();
 

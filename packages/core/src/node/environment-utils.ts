@@ -15,6 +15,7 @@
 // *****************************************************************************
 
 import { injectable } from 'inversify';
+import process from "node:process";
 
 @injectable()
 export class EnvironmentUtils {

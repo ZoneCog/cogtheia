@@ -416,7 +416,7 @@ export class ScmAmendComponent extends React.Component<ScmAmendComponentProps, S
      */
     protected onNextFrame(callback: FrameRequestCallback): void {
         setTimeout(
-            () => window.requestAnimationFrame(callback),
+            () => globalThis.requestAnimationFrame(callback),
             0);
     }
 

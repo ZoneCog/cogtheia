@@ -19,6 +19,7 @@ import { ConnectionClosedError, RPCProtocol } from '@theia/plugin-ext/lib/common
 import { ProcessTerminatedMessage, ProcessTerminateMessage } from '@theia/plugin-ext/lib/hosted/node/hosted-plugin-protocol';
 import { HeadlessPluginHostRPC } from './plugin-host-headless-rpc';
 import pluginHostModule from './plugin-host-headless-module';
+import process from "node:process";
 
 const banner = `HEADLESS_PLUGIN_HOST(${process.pid}):`;
 console.log(banner, 'Starting instance');
