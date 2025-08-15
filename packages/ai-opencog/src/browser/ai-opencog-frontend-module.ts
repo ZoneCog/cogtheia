@@ -15,6 +15,8 @@
 // *****************************************************************************
 
 import { ContainerModule } from '@theia/core/shared/inversify';
+import { FrontendApplicationContribution, WidgetFactory } from '@theia/core/lib/browser';
+import { CommandContribution, MenuContribution } from '@theia/core/lib/common';
 import { 
     OpenCogService,
     KnowledgeManagementService,
@@ -62,6 +64,19 @@ import { CodeModificationActuator } from './code-modification-actuator';
 import { ToolControlActuator } from './tool-control-actuator';
 import { EnvironmentManagementActuator } from './environment-management-actuator';
 import { SensorMotorService } from './sensor-motor-service';
+
+// Phase 4: Cognitive Visualization Widgets
+import { CodeIntelligenceWidget } from './cognitive-widgets/code-intelligence-widget';
+import { LearningProgressWidget } from './cognitive-widgets/learning-progress-widget';
+import { KnowledgeExplorerWidget } from './cognitive-widgets/knowledge-explorer-widget';
+import { CognitiveAssistantWidget } from './cognitive-widgets/cognitive-assistant-widget';
+import { 
+    CognitiveWidgetsContribution,
+    LearningProgressContribution,
+    KnowledgeExplorerContribution,
+    CognitiveAssistantContribution
+} from './cognitive-widgets/cognitive-widgets-contribution';
+import { WidgetFactory } from '@theia/core/lib/browser/widget-manager';
 
 export default new ContainerModule(bind => {
     // Bind the frontend OpenCog service
@@ -125,4 +140,42 @@ export default new ContainerModule(bind => {
     bind(ToolControlActuator).toSelf().inSingletonScope();
     bind(EnvironmentManagementActuator).toSelf().inSingletonScope();
     bind(SensorMotorService).toSelf().inSingletonScope();
+
+    // Phase 4: Cognitive Visualization Widgets
+    bind(CodeIntelligenceWidget).toSelf();
+    bind(LearningProgressWidget).toSelf();
+    bind(KnowledgeExplorerWidget).toSelf();
+    bind(CognitiveAssistantWidget).toSelf();
+
+    // Bind widget factories
+    bind(WidgetFactory).toDynamicValue(ctx => ({
+        id: CodeIntelligenceWidget.ID,
+        createWidget: () => ctx.container.get(CodeIntelligenceWidget)
+    })).inSingletonScope();
+
+    bind(WidgetFactory).toDynamicValue(ctx => ({
+        id: LearningProgressWidget.ID,
+        createWidget: () => ctx.container.get(LearningProgressWidget)
+    })).inSingletonScope();
+
+    bind(WidgetFactory).toDynamicValue(ctx => ({
+        id: KnowledgeExplorerWidget.ID,
+        createWidget: () => ctx.container.get(KnowledgeExplorerWidget)
+    })).inSingletonScope();
+
+    bind(WidgetFactory).toDynamicValue(ctx => ({
+        id: CognitiveAssistantWidget.ID,
+        createWidget: () => ctx.container.get(CognitiveAssistantWidget)
+    })).inSingletonScope();
+
+    // Bind widget contributions
+    bind(CognitiveWidgetsContribution).toSelf().inSingletonScope();
+    bind(LearningProgressContribution).toSelf().inSingletonScope();
+    bind(KnowledgeExplorerContribution).toSelf().inSingletonScope();
+    bind(CognitiveAssistantContribution).toSelf().inSingletonScope();
+
+    // Register contributions
+    bind(FrontendApplicationContribution).toService(CognitiveWidgetsContribution);
+    bind(CommandContribution).toService(CognitiveWidgetsContribution);
+    bind(MenuContribution).toService(CognitiveWidgetsContribution);
 });
