@@ -77,6 +77,9 @@ import {
     CognitiveAssistantContribution
 } from './cognitive-widgets/cognitive-widgets-contribution';
 import { WidgetFactory } from '@theia/core/lib/browser/widget-manager';
+// OpenCog Chat Agent
+import { OpenCogChatAgent } from './opencog-chat-agent';
+import { ChatAgent } from '@theia/ai-chat/lib/common/chat-agents';
 
 export default new ContainerModule(bind => {
     // Bind the frontend OpenCog service
@@ -178,4 +181,8 @@ export default new ContainerModule(bind => {
     bind(FrontendApplicationContribution).toService(CognitiveWidgetsContribution);
     bind(CommandContribution).toService(CognitiveWidgetsContribution);
     bind(MenuContribution).toService(CognitiveWidgetsContribution);
+
+    // Bind OpenCog Chat Agent
+    bind(OpenCogChatAgent).toSelf().inSingletonScope();
+    bind(ChatAgent).toService(OpenCogChatAgent);
 });
