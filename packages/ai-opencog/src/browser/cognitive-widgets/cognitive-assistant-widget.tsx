@@ -18,6 +18,8 @@ import { inject, injectable, postConstruct } from '@theia/core/shared/inversify'
 import { BaseWidget, codicon, Message } from '@theia/core/lib/browser';
 import { nls } from '@theia/core/lib/common/nls';
 import { Disposable, DisposableCollection } from '@theia/core/lib/common/disposable';
+import { EditorManager } from '@theia/editor/lib/browser/editor-manager';
+import { MonacoEditor } from '@theia/monaco/lib/browser/monaco-editor';
 import { IntelligentAssistanceAgent } from '../intelligent-assistance-agent';
 import { OpenCogService } from '../../common/opencog-service';
 import * as React from '@theia/core/shared/react';
@@ -58,6 +60,9 @@ export class CognitiveAssistantWidget extends BaseWidget {
     @inject(OpenCogService)
     protected readonly openCogService: OpenCogService;
 
+    @inject(EditorManager)
+    protected readonly editorManager: EditorManager;
+
     protected readonly toDispose = new DisposableCollection();
     protected messages: ChatMessage[] = [];
     protected currentInput: string = '';
@@ -74,6 +79,7 @@ export class CognitiveAssistantWidget extends BaseWidget {
         this.title.closable = true;
 
         this.initializeChat();
+        this.setupRealTimeContextUpdates();
         this.update();
     }
 
@@ -380,6 +386,64 @@ export class CognitiveAssistantWidget extends BaseWidget {
             case 'system': return 'gear';
             default: return 'comment';
         }
+    }
+
+    private setupRealTimeContextUpdates(): void {
+        // Listen for active editor changes to update context in real-time
+        this.toDispose.push(
+            this.editorManager.onActiveEditorChanged(() => {
+                this.updateCurrentContext();
+            })
+        );
+
+        // Update context immediately if there's an active editor
+        this.updateCurrentContext();
+    }
+
+    private updateCurrentContext(): void {
+        const activeEditor = this.editorManager.activeEditor;
+        if (activeEditor instanceof MonacoEditor) {
+            const model = activeEditor.getControl().getModel();
+            if (model) {
+                this.context = {
+                    ...this.context,
+                    currentFile: model.uri.path,
+                    projectContext: {
+                        language: model.getLanguageId(),
+                        framework: this.detectFramework(model.uri.path),
+                        dependencies: [] // Could be enhanced to detect actual dependencies
+                    }
+                };
+                
+                // Update the widget display to reflect the new context
+                this.update();
+            }
+        } else {
+            // No active editor, clear file context
+            this.context = {
+                ...this.context,
+                currentFile: undefined,
+                projectContext: undefined
+            };
+            this.update();
+        }
+    }
+
+    private detectFramework(filePath: string): string | undefined {
+        // Simple framework detection based on file patterns
+        if (filePath.includes('package.json') || filePath.includes('.ts') || filePath.includes('.js')) {
+            return 'Node.js/TypeScript';
+        }
+        if (filePath.includes('.py')) {
+            return 'Python';
+        }
+        if (filePath.includes('.java')) {
+            return 'Java';
+        }
+        if (filePath.includes('.cpp') || filePath.includes('.c')) {
+            return 'C++/C';
+        }
+        return undefined;
     }
 
     dispose(): void {

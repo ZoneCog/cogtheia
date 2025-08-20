@@ -41,7 +41,7 @@ describe('Phase 4: Cognitive Visualization Widgets', () => {
         } as any);
         
         container.bind(RealTimeCodeAnalyzer).toConstantValue({
-            onAnalysisComplete: () => ({ dispose: () => {} }),
+            onAnalysisCompleted: () => ({ dispose: () => {} }),
             getAnalysisResult: () => null
         } as any);
         
