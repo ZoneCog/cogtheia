@@ -26,7 +26,14 @@ import {
     AdaptationStrategy,
     UserBehaviorPattern,
     LearningContext,
-    UserFeedback
+    UserFeedback,
+    // Multi-modal types
+    MultiModalData,
+    MultiModalPatternInput,
+    MultiModalPatternResult,
+    MultiModalLearningData,
+    ModalityType,
+    TensorData
 } from './opencog-types';
 import { KnowledgeManagementService } from './knowledge-management-service';
 
@@ -110,6 +117,66 @@ export interface OpenCogService {
      * Knowledge Management Service integration
      */
     getKnowledgeManagementService(): KnowledgeManagementService;
+
+    // ===== PHASE 5: MULTI-MODAL COGNITIVE PROCESSING =====
+
+    /**
+     * Multi-modal data processing
+     */
+    processMultiModalData(data: MultiModalData): Promise<MultiModalData>;
+    processMultiModalBatch(data: MultiModalData[]): Promise<MultiModalData[]>;
+
+    /**
+     * Multi-modal pattern recognition
+     */
+    recognizeMultiModalPatterns(input: MultiModalPatternInput): Promise<MultiModalPatternResult[]>;
+
+    /**
+     * Multi-modal learning
+     */
+    learnFromMultiModalData(data: MultiModalLearningData): Promise<void>;
+    getMultiModalLearningStats(): Promise<{
+        totalMultiModalRecords: number;
+        modalityDistribution: Record<ModalityType, number>;
+        crossModalPatterns: number;
+        processingAccuracy: Record<ModalityType, number>;
+    }>;
+
+    /**
+     * Tensor operations with 4 degrees of freedom
+     */
+    processTensorData(tensor: TensorData): Promise<TensorData>;
+    performTensorOperation(tensor: TensorData, operation: string, parameters?: Record<string, any>): Promise<TensorData>;
+    fuseTensorData(tensors: TensorData[], strategy?: 'concatenation' | 'addition' | 'attention' | 'learned'): Promise<TensorData>;
+
+    /**
+     * Cross-modal reasoning
+     */
+    reasonAcrossModalities(query: ReasoningQuery, modalData: MultiModalData[]): Promise<ReasoningResult>;
+
+    /**
+     * Multi-modal context understanding
+     */
+    analyzeMultiModalContext(data: MultiModalData[]): Promise<{
+        context: any;
+        dominantModality: ModalityType;
+        modalityInteractions: Array<{
+            source: ModalityType;
+            target: ModalityType;
+            interaction: string;
+            strength: number;
+        }>;
+        cognitiveLoad: number;
+    }>;
+
+    /**
+     * Attention mechanisms for multi-modal data
+     */
+    applyAttentionMechanism(data: MultiModalData[], attentionType: 'spatial' | 'temporal' | 'cross-modal' | 'cognitive'): Promise<{
+        attentionWeights: Record<string, number>;
+        focusedData: MultiModalData[];
+        attentionMap?: number[];
+    }>;
 }
 
 export const OpenCogService = 'OpenCogService';

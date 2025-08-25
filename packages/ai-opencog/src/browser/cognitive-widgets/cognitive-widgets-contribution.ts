@@ -24,6 +24,7 @@ import { CodeIntelligenceWidget } from './code-intelligence-widget';
 import { LearningProgressWidget } from './learning-progress-widget';
 import { KnowledgeExplorerWidget } from './knowledge-explorer-widget';
 import { CognitiveAssistantWidget } from './cognitive-assistant-widget';
+import { MultiModalCognitiveWidget } from './multi-modal-cognitive-widget';
 
 export const COGNITIVE_WIDGETS_COMMANDS = {
     SHOW_CODE_INTELLIGENCE: Command.toLocalizedCommand({
@@ -45,6 +46,11 @@ export const COGNITIVE_WIDGETS_COMMANDS = {
         id: 'cognitive.show-cognitive-assistant',
         label: 'Show Cognitive Assistant'
     }, 'theia/ai/cognitive/showCognitiveAssistant'),
+    
+    SHOW_MULTI_MODAL_COGNITIVE: Command.toLocalizedCommand({
+        id: 'cognitive.show-multi-modal-cognitive',
+        label: 'Show Multi-Modal Cognitive Processing'
+    }, 'theia/ai/cognitive/showMultiModalCognitive'),
     
     TOGGLE_ALL_COGNITIVE_WIDGETS: Command.toLocalizedCommand({
         id: 'cognitive.toggle-all-widgets',
@@ -99,6 +105,14 @@ export class CognitiveWidgetsContribution extends AbstractViewContribution<CodeI
             })
         });
 
+        commands.registerCommand(COGNITIVE_WIDGETS_COMMANDS.SHOW_MULTI_MODAL_COGNITIVE, {
+            execute: () => this.widget.then(async () => {
+                const widget = await this.widgetManager.getOrCreateWidget(MultiModalCognitiveWidget.ID);
+                this.shell.addWidget(widget, { area: 'main', mode: 'tab-after' });
+                this.shell.activateWidget(widget.id);
+            })
+        });
+
         commands.registerCommand(COGNITIVE_WIDGETS_COMMANDS.TOGGLE_ALL_COGNITIVE_WIDGETS, {
             execute: async () => {
                 // Toggle all cognitive widgets
@@ -106,7 +120,8 @@ export class CognitiveWidgetsContribution extends AbstractViewContribution<CodeI
                     commands.executeCommand(COGNITIVE_WIDGETS_COMMANDS.SHOW_CODE_INTELLIGENCE.id),
                     commands.executeCommand(COGNITIVE_WIDGETS_COMMANDS.SHOW_LEARNING_PROGRESS.id),
                     commands.executeCommand(COGNITIVE_WIDGETS_COMMANDS.SHOW_KNOWLEDGE_EXPLORER.id),
-                    commands.executeCommand(COGNITIVE_WIDGETS_COMMANDS.SHOW_COGNITIVE_ASSISTANT.id)
+                    commands.executeCommand(COGNITIVE_WIDGETS_COMMANDS.SHOW_COGNITIVE_ASSISTANT.id),
+                    commands.executeCommand(COGNITIVE_WIDGETS_COMMANDS.SHOW_MULTI_MODAL_COGNITIVE.id)
                 ]);
             }
         });
@@ -151,12 +166,19 @@ export class CognitiveWidgetsContribution extends AbstractViewContribution<CodeI
             order: '4'
         });
 
+        menus.registerMenuAction(cognitiveSubmenu, {
+            commandId: COGNITIVE_WIDGETS_COMMANDS.SHOW_MULTI_MODAL_COGNITIVE.id,
+            label: COGNITIVE_WIDGETS_COMMANDS.SHOW_MULTI_MODAL_COGNITIVE.label,
+            icon: codicon('brain'),
+            order: '5'
+        });
+
         // Separator and toggle all command
         menus.registerMenuAction(cognitiveSubmenu, {
             commandId: COGNITIVE_WIDGETS_COMMANDS.TOGGLE_ALL_COGNITIVE_WIDGETS.id,
             label: COGNITIVE_WIDGETS_COMMANDS.TOGGLE_ALL_COGNITIVE_WIDGETS.label,
             icon: codicon('layout'),
-            order: '5'
+            order: '6'
         });
     }
 
@@ -198,6 +220,18 @@ export class CognitiveAssistantContribution extends AbstractViewContribution<Cog
             widgetName: CognitiveAssistantWidget.LABEL,
             defaultWidgetOptions: { area: 'bottom' },
             toggleCommandId: COGNITIVE_WIDGETS_COMMANDS.SHOW_COGNITIVE_ASSISTANT.id
+        });
+    }
+}
+
+@injectable()
+export class MultiModalCognitiveContribution extends AbstractViewContribution<MultiModalCognitiveWidget> {
+    constructor() {
+        super({
+            widgetId: MultiModalCognitiveWidget.ID,
+            widgetName: MultiModalCognitiveWidget.LABEL,
+            defaultWidgetOptions: { area: 'main', mode: 'tab-after' },
+            toggleCommandId: COGNITIVE_WIDGETS_COMMANDS.SHOW_MULTI_MODAL_COGNITIVE.id
         });
     }
 }

@@ -240,3 +240,269 @@ export interface PatternMetadata {
     consistency?: number;
     [key: string]: any;
 }
+
+// ===== PHASE 5: MULTI-MODAL COGNITIVE PROCESSING TYPES =====
+
+/**
+ * Multi-modal data types for comprehensive cognitive processing
+ * Supports text, image, audio, and tensor data with 4 degrees of freedom
+ */
+
+/**
+ * Supported modalities for multi-modal processing
+ */
+export type ModalityType = 'text' | 'image' | 'audio' | 'tensor' | 'mixed';
+
+/**
+ * Multi-modal data structure
+ */
+export interface MultiModalData {
+    id?: string;
+    type: ModalityType;
+    content: TextData | ImageData | AudioData | TensorData | MixedModalData;
+    metadata?: MultiModalMetadata;
+    timestamp?: number;
+}
+
+/**
+ * Text data for multi-modal processing
+ */
+export interface TextData {
+    text: string;
+    language?: string;
+    encoding?: string;
+    format?: 'plain' | 'markdown' | 'code' | 'html' | 'json';
+    semanticAnnotations?: SemanticAnnotation[];
+}
+
+/**
+ * Image data for multi-modal processing
+ */
+export interface ImageData {
+    data: ArrayBuffer | string; // Binary data or base64 string
+    format: 'png' | 'jpg' | 'jpeg' | 'gif' | 'svg' | 'webp';
+    width?: number;
+    height?: number;
+    channels?: number;
+    description?: string;
+    features?: ImageFeature[];
+}
+
+/**
+ * Audio data for multi-modal processing
+ */
+export interface AudioData {
+    data: ArrayBuffer | string; // Binary data or base64 string
+    format: 'wav' | 'mp3' | 'ogg' | 'flac' | 'aac';
+    duration?: number; // in seconds
+    sampleRate?: number;
+    channels?: number;
+    transcript?: string;
+    features?: AudioFeature[];
+}
+
+/**
+ * Tensor data with 4 degrees of freedom for advanced cognitive processing
+ */
+export interface TensorData {
+    data: number[] | Float32Array | Float64Array;
+    shape: [number, number, number, number]; // 4 DoF as specified
+    dtype: 'float32' | 'float64' | 'int32' | 'int64';
+    description?: string;
+    operations?: TensorOperation[];
+}
+
+/**
+ * Mixed modal data combining multiple modalities
+ */
+export interface MixedModalData {
+    components: MultiModalData[];
+    relationships?: ModalityRelationship[];
+    fusionStrategy?: 'early' | 'late' | 'intermediate' | 'attention';
+}
+
+/**
+ * Semantic annotations for text data
+ */
+export interface SemanticAnnotation {
+    type: 'entity' | 'concept' | 'relation' | 'intent' | 'sentiment';
+    value: string;
+    confidence: number;
+    span?: [number, number]; // start and end positions
+}
+
+/**
+ * Image features extracted for cognitive processing
+ */
+export interface ImageFeature {
+    type: 'edge' | 'corner' | 'blob' | 'texture' | 'color' | 'shape' | 'object';
+    value: number[];
+    confidence: number;
+    location?: [number, number, number, number]; // x, y, width, height
+}
+
+/**
+ * Audio features extracted for cognitive processing
+ */
+export interface AudioFeature {
+    type: 'mfcc' | 'spectral' | 'temporal' | 'pitch' | 'energy' | 'rhythm';
+    value: number[];
+    confidence: number;
+    timespan?: [number, number]; // start and end time in seconds
+}
+
+/**
+ * Tensor operations for cognitive processing
+ */
+export interface TensorOperation {
+    type: 'convolution' | 'pooling' | 'normalization' | 'activation' | 'fusion' | 'attention';
+    parameters: Record<string, any>;
+    result?: TensorData;
+}
+
+/**
+ * Relationships between different modalities
+ */
+export interface ModalityRelationship {
+    sourceModality: ModalityType;
+    targetModality: ModalityType;
+    relationshipType: 'synchronization' | 'correlation' | 'causation' | 'complement' | 'conflict';
+    strength: number; // 0-1 scale
+    confidence: number;
+}
+
+/**
+ * Metadata for multi-modal data
+ */
+export interface MultiModalMetadata {
+    source?: string;
+    quality?: number; // 0-1 scale
+    processingHistory?: ProcessingStep[];
+    cognitiveAnnotations?: CognitiveAnnotation[];
+    context?: MultiModalContext;
+}
+
+/**
+ * Processing step in the multi-modal pipeline
+ */
+export interface ProcessingStep {
+    operation: string;
+    timestamp: number;
+    parameters?: Record<string, any>;
+    processingTime?: number; // in milliseconds
+}
+
+/**
+ * Cognitive annotations for multi-modal data
+ */
+export interface CognitiveAnnotation {
+    type: 'attention' | 'memory' | 'reasoning' | 'prediction' | 'emotion' | 'intent';
+    value: any;
+    confidence: number;
+    source?: string;
+}
+
+/**
+ * Context for multi-modal processing
+ */
+export interface MultiModalContext {
+    task?: string;
+    domain?: string;
+    userIntent?: string;
+    environmentalFactors?: Record<string, any>;
+    temporalContext?: {
+        duration?: number;
+        sequence?: number;
+        frequency?: number;
+    };
+}
+
+/**
+ * Multi-modal pattern recognition input
+ */
+export interface MultiModalPatternInput {
+    data: MultiModalData[];
+    context?: MultiModalContext;
+    scope?: 'local' | 'global' | 'cross-modal' | 'temporal' | 'spatial';
+    options?: MultiModalPatternOptions;
+}
+
+/**
+ * Options for multi-modal pattern recognition
+ */
+export interface MultiModalPatternOptions extends PatternRecognitionOptions {
+    /** Modalities to include in pattern recognition */
+    modalities?: ModalityType[];
+    /** Whether to perform cross-modal pattern recognition */
+    crossModal?: boolean;
+    /** Fusion strategy for multi-modal patterns */
+    fusionStrategy?: 'early' | 'late' | 'intermediate' | 'attention';
+    /** Temporal window for pattern recognition */
+    temporalWindow?: number;
+}
+
+/**
+ * Multi-modal pattern recognition result
+ */
+export interface MultiModalPatternResult {
+    pattern: MultiModalPattern;
+    confidence: number;
+    modalities: ModalityType[];
+    instances: MultiModalData[];
+    metadata?: MultiModalPatternMetadata;
+}
+
+/**
+ * Multi-modal pattern structure
+ */
+export interface MultiModalPattern {
+    id?: string;
+    type: PatternType | MultiModalPatternType;
+    modalities: ModalityType[];
+    structure: any;
+    relationships?: ModalityRelationship[];
+    temporalAspects?: TemporalPattern;
+}
+
+/**
+ * Additional pattern types for multi-modal processing
+ */
+export type MultiModalPatternType = 
+    | 'cross-modal-correlation'
+    | 'temporal-synchronization'
+    | 'multimodal-concept'
+    | 'attention-pattern'
+    | 'fusion-pattern'
+    | 'modality-dominance'
+    | 'cognitive-load'
+    | 'context-switch';
+
+/**
+ * Temporal patterns in multi-modal data
+ */
+export interface TemporalPattern {
+    duration: number;
+    frequency?: number;
+    phase?: number;
+    synchronization?: Record<ModalityType, number>;
+}
+
+/**
+ * Metadata for multi-modal pattern results
+ */
+export interface MultiModalPatternMetadata extends PatternMetadata {
+    modalityContribution?: Record<ModalityType, number>;
+    crossModalCorrelation?: number;
+    temporalConsistency?: number;
+    cognitiveComplexity?: number;
+}
+
+/**
+ * Multi-modal learning data for cognitive processing
+ */
+export interface MultiModalLearningData extends LearningData {
+    modalData: MultiModalData[];
+    crossModalLabels?: Record<string, any>;
+    temporalSequence?: number[];
+    cognitiveGoal?: string;
+}

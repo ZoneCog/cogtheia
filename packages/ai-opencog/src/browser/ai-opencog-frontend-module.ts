@@ -74,12 +74,15 @@ import {
     CognitiveWidgetsContribution,
     LearningProgressContribution,
     KnowledgeExplorerContribution,
-    CognitiveAssistantContribution
+    CognitiveAssistantContribution,
+    MultiModalCognitiveContribution
 } from './cognitive-widgets/cognitive-widgets-contribution';
 import { WidgetFactory } from '@theia/core/lib/browser/widget-manager';
 // OpenCog Chat Agent
 import { OpenCogChatAgent } from './opencog-chat-agent';
 import { ChatAgent } from '@theia/ai-chat/lib/common/chat-agents';
+// Phase 5: Multi-Modal Cognitive Processing Widget
+import { MultiModalCognitiveWidget } from './cognitive-widgets/multi-modal-cognitive-widget';
 
 export default new ContainerModule(bind => {
     // Bind the frontend OpenCog service
@@ -149,6 +152,9 @@ export default new ContainerModule(bind => {
     bind(LearningProgressWidget).toSelf();
     bind(KnowledgeExplorerWidget).toSelf();
     bind(CognitiveAssistantWidget).toSelf();
+    
+    // Phase 5: Multi-Modal Cognitive Processing Widget
+    bind(MultiModalCognitiveWidget).toSelf();
 
     // Bind widget factories
     bind(WidgetFactory).toDynamicValue(ctx => ({
@@ -171,11 +177,17 @@ export default new ContainerModule(bind => {
         createWidget: () => ctx.container.get(CognitiveAssistantWidget)
     })).inSingletonScope();
 
+    bind(WidgetFactory).toDynamicValue(ctx => ({
+        id: MultiModalCognitiveWidget.ID,
+        createWidget: () => ctx.container.get(MultiModalCognitiveWidget)
+    })).inSingletonScope();
+
     // Bind widget contributions
     bind(CognitiveWidgetsContribution).toSelf().inSingletonScope();
     bind(LearningProgressContribution).toSelf().inSingletonScope();
     bind(KnowledgeExplorerContribution).toSelf().inSingletonScope();
     bind(CognitiveAssistantContribution).toSelf().inSingletonScope();
+    bind(MultiModalCognitiveContribution).toSelf().inSingletonScope();
 
     // Register contributions
     bind(FrontendApplicationContribution).toService(CognitiveWidgetsContribution);
