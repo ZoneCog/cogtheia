@@ -267,5 +267,9 @@ export class FrontendOpenCogService implements OpenCogService {
     }> {
         return this.openCogService.applyAttentionMechanism(data, attentionType);
     }
-}
+
+    // Knowledge management service access
+    getKnowledgeManagementService(): any {
+        return this.openCogService.getKnowledgeManagementService();
+    }
 }

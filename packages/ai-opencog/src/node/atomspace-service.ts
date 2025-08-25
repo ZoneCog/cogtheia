@@ -1739,8 +1739,8 @@ export class AtomSpaceService implements OpenCogService {
             attentionMap
         };
     }
-}
 
+    // Knowledge management service access
     getKnowledgeManagementService(): KnowledgeManagementService {
         return this.knowledgeManagementService;
     }
