@@ -32,7 +32,9 @@ import {
     UnsupervisedLearningService,
     UNSUPERVISED_LEARNING_SERVICE_PATH,
     ReinforcementLearningService,
-    REINFORCEMENT_LEARNING_SERVICE_PATH
+    REINFORCEMENT_LEARNING_SERVICE_PATH,
+    DistributedReasoningService,
+    DISTRIBUTED_REASONING_SERVICE_PATH
 } from '../common';
 import { AtomSpaceService } from './atomspace-service';
 import { KnowledgeManagementServiceImpl } from './knowledge-management-service-impl';
@@ -48,6 +50,8 @@ import { AbductiveReasoningServiceImpl } from './abductive-reasoning-service';
 import { SupervisedLearningServiceImpl } from './supervised-learning-service';
 import { UnsupervisedLearningServiceImpl } from './unsupervised-learning-service';
 import { ReinforcementLearningServiceImpl } from './reinforcement-learning-service';
+// Phase 5 distributed reasoning
+import { DistributedReasoningServiceImpl } from './distributed-reasoning-service-impl';
 
 export default new ContainerModule(bind => {
     bind(OpenCogService).to(AtomSpaceService).inSingletonScope();
@@ -71,6 +75,9 @@ export default new ContainerModule(bind => {
     bind(SupervisedLearningService).to(SupervisedLearningServiceImpl).inSingletonScope();
     bind(UnsupervisedLearningService).to(UnsupervisedLearningServiceImpl).inSingletonScope();
     bind(ReinforcementLearningService).to(ReinforcementLearningServiceImpl).inSingletonScope();
+    
+    // Phase 5: Bind distributed reasoning service
+    bind(DistributedReasoningService).to(DistributedReasoningServiceImpl).inSingletonScope();
     
     bind(ConnectionHandler).toDynamicValue(ctx =>
         new RpcConnectionHandler(OPENCOG_SERVICE_PATH, () =>
@@ -119,6 +126,13 @@ export default new ContainerModule(bind => {
     bind(ConnectionHandler).toDynamicValue(ctx =>
         new RpcConnectionHandler(REINFORCEMENT_LEARNING_SERVICE_PATH, () =>
             ctx.container.get(ReinforcementLearningService)
+        )
+    ).inSingletonScope();
+    
+    // Phase 5: Bind distributed reasoning service connection handler
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(DISTRIBUTED_REASONING_SERVICE_PATH, () =>
+            ctx.container.get(DistributedReasoningService)
         )
     ).inSingletonScope();
 });
