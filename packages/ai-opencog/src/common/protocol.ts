@@ -24,6 +24,14 @@ import {
     PatternInput,
     PatternResult
 } from './opencog-types';
+import {
+    DistributedReasoningTask,
+    DistributedReasoningResult,
+    NodeRegistration,
+    NodeHeartbeat,
+    DistributedReasoningStats,
+    ReasoningCapability
+} from './distributed-reasoning-types';
 
 /**
  * JSON-RPC protocol extensions for OpenCog operations
@@ -49,6 +57,18 @@ export interface OpenCogProtocol {
     'opencog/clear-atomspace': {};
     'opencog/export-atomspace': {};
     'opencog/import-atomspace': { data: string };
+
+    // Distributed reasoning operations
+    'distributed-reasoning/submit-task': { query: ReasoningQuery; constraints?: any };
+    'distributed-reasoning/get-task-status': { taskId: string };
+    'distributed-reasoning/cancel-task': { taskId: string };
+    'distributed-reasoning/register-node': { registration: NodeRegistration };
+    'distributed-reasoning/deregister-node': { nodeId: string };
+    'distributed-reasoning/send-heartbeat': { heartbeat: NodeHeartbeat };
+    'distributed-reasoning/get-active-nodes': {};
+    'distributed-reasoning/get-nodes-by-capability': { capability: ReasoningCapability };
+    'distributed-reasoning/get-system-stats': {};
+    'distributed-reasoning/health-check': {};
 }
 
 export interface OpenCogServer extends RpcServer<OpenCogProtocol> {
