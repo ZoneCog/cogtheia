@@ -63,7 +63,7 @@ export class CodeIntelligenceWidget extends BaseWidget {
         this.title.iconClass = codicon('graph');
         this.title.closable = true;
 
-        this.toDispose.push(this.realTimeAnalyzer.onAnalysisComplete((result: AnalysisResult) => {
+        this.toDispose.push(this.realTimeAnalyzer.onAnalysisCompleted((result: AnalysisResult) => {
             this.updateData(result);
         }));
 

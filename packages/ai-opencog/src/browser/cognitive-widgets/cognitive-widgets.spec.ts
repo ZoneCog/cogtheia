@@ -26,6 +26,7 @@ import { LearningAgent } from '../enhanced-learning-agent';
 import { IntelligentAssistanceAgent } from '../intelligent-assistance-agent';
 import { KnowledgeManagementService } from '../../common/knowledge-management-service';
 import { OpenCogService } from '../../common/opencog-service';
+import { EditorManager } from '@theia/editor/lib/browser/editor-manager';
 
 describe('Phase 4: Cognitive Visualization Widgets', () => {
     let container: Container;
@@ -41,7 +42,7 @@ describe('Phase 4: Cognitive Visualization Widgets', () => {
         } as any);
         
         container.bind(RealTimeCodeAnalyzer).toConstantValue({
-            onAnalysisComplete: () => ({ dispose: () => {} }),
+            onAnalysisCompleted: () => ({ dispose: () => {} }),
             getAnalysisResult: () => null
         } as any);
         
@@ -49,6 +50,10 @@ describe('Phase 4: Cognitive Visualization Widgets', () => {
         container.bind(LearningAgent).toConstantValue({} as any);
         container.bind(IntelligentAssistanceAgent).toConstantValue({} as any);
         container.bind(KnowledgeManagementService).toConstantValue({} as any);
+        container.bind(EditorManager).toConstantValue({
+            onActiveEditorChanged: () => ({ dispose: () => {} }),
+            activeEditor: null
+        } as any);
     });
 
     describe('CodeIntelligenceWidget', () => {
@@ -144,6 +149,62 @@ describe('Phase 4: Cognitive Visualization Widgets', () => {
                 expect(label).to.be.a('string');
                 expect(label.length).to.be.greaterThan(0);
             });
+        });
+    });
+
+    describe('Real-time Feedback Integration', () => {
+        it('should connect CodeIntelligenceWidget to real-time analyzer events', () => {
+            let eventListener: any = null;
+            const mockAnalyzer = {
+                onAnalysisCompleted: (listener: any) => {
+                    eventListener = listener;
+                    return { dispose: () => {} };
+                },
+                getAnalysisResult: () => null
+            };
+            
+            container.bind(RealTimeCodeAnalyzer).toConstantValue(mockAnalyzer as any);
+            container.bind(CodeIntelligenceWidget).toSelf();
+            
+            const widget = container.get(CodeIntelligenceWidget);
+            expect(eventListener).to.not.be.null;
+            expect(typeof eventListener).to.equal('function');
+        });
+
+        it('should connect CognitiveAssistantWidget to editor manager events', () => {
+            let editorChangeListener: any = null;
+            const mockEditorManager = {
+                onActiveEditorChanged: (listener: any) => {
+                    editorChangeListener = listener;
+                    return { dispose: () => {} };
+                },
+                activeEditor: null
+            };
+            
+            container.bind(EditorManager).toConstantValue(mockEditorManager as any);
+            container.bind(CognitiveAssistantWidget).toSelf();
+            
+            const widget = container.get(CognitiveAssistantWidget);
+            expect(editorChangeListener).to.not.be.null;
+            expect(typeof editorChangeListener).to.equal('function');
+        });
+
+        it('should properly dispose event listeners on widget disposal', () => {
+            let disposeCalled = false;
+            const mockAnalyzer = {
+                onAnalysisCompleted: () => ({
+                    dispose: () => { disposeCalled = true; }
+                }),
+                getAnalysisResult: () => null
+            };
+            
+            container.bind(RealTimeCodeAnalyzer).toConstantValue(mockAnalyzer as any);
+            container.bind(CodeIntelligenceWidget).toSelf();
+            
+            const widget = container.get(CodeIntelligenceWidget);
+            widget.dispose();
+            
+            expect(disposeCalled).to.be.true;
         });
     });
 });
