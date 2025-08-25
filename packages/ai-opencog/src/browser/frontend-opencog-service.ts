@@ -30,7 +30,14 @@ import {
     AdaptationStrategy,
     UserBehaviorPattern,
     LearningContext,
-    UserFeedback
+    UserFeedback,
+    // Multi-modal types
+    MultiModalData,
+    MultiModalPatternInput,
+    MultiModalPatternResult,
+    MultiModalLearningData,
+    ModalityType,
+    TensorData
 } from '../common';
 
 /**
@@ -152,4 +159,113 @@ export class FrontendOpenCogService implements OpenCogService {
     }> {
         return this.openCogService.getLearningStats();
     }
+
+    // ===== PHASE 5: MULTI-MODAL COGNITIVE PROCESSING METHODS =====
+
+    /**
+     * Process single multi-modal data
+     */
+    async processMultiModalData(data: MultiModalData): Promise<MultiModalData> {
+        return this.openCogService.processMultiModalData(data);
+    }
+
+    /**
+     * Process batch of multi-modal data
+     */
+    async processMultiModalBatch(data: MultiModalData[]): Promise<MultiModalData[]> {
+        return this.openCogService.processMultiModalBatch(data);
+    }
+
+    /**
+     * Recognize patterns in multi-modal data
+     */
+    async recognizeMultiModalPatterns(input: MultiModalPatternInput): Promise<MultiModalPatternResult[]> {
+        return this.openCogService.recognizeMultiModalPatterns(input);
+    }
+
+    /**
+     * Learn from multi-modal data
+     */
+    async learnFromMultiModalData(data: MultiModalLearningData): Promise<void> {
+        return this.openCogService.learnFromMultiModalData(data);
+    }
+
+    /**
+     * Get multi-modal learning statistics
+     */
+    async getMultiModalLearningStats(): Promise<{
+        totalMultiModalRecords: number;
+        modalityDistribution: Record<ModalityType, number>;
+        crossModalPatterns: number;
+        processingAccuracy: Record<ModalityType, number>;
+    }> {
+        return this.openCogService.getMultiModalLearningStats();
+    }
+
+    /**
+     * Process tensor data with 4 degrees of freedom
+     */
+    async processTensorData(tensor: TensorData): Promise<TensorData> {
+        return this.openCogService.processTensorData(tensor);
+    }
+
+    /**
+     * Perform specific tensor operation
+     */
+    async performTensorOperation(
+        tensor: TensorData, 
+        operation: string, 
+        parameters?: Record<string, any>
+    ): Promise<TensorData> {
+        return this.openCogService.performTensorOperation(tensor, operation, parameters);
+    }
+
+    /**
+     * Fuse multiple tensor data
+     */
+    async fuseTensorData(
+        tensors: TensorData[], 
+        strategy: 'concatenation' | 'addition' | 'attention' | 'learned' = 'concatenation'
+    ): Promise<TensorData> {
+        return this.openCogService.fuseTensorData(tensors, strategy);
+    }
+
+    /**
+     * Cross-modal reasoning
+     */
+    async reasonAcrossModalities(query: ReasoningQuery, modalData: MultiModalData[]): Promise<ReasoningResult> {
+        return this.openCogService.reasonAcrossModalities(query, modalData);
+    }
+
+    /**
+     * Analyze multi-modal context
+     */
+    async analyzeMultiModalContext(data: MultiModalData[]): Promise<{
+        context: any;
+        dominantModality: ModalityType;
+        modalityInteractions: Array<{
+            source: ModalityType;
+            target: ModalityType;
+            interaction: string;
+            strength: number;
+        }>;
+        cognitiveLoad: number;
+    }> {
+        return this.openCogService.analyzeMultiModalContext(data);
+    }
+
+    /**
+     * Apply attention mechanisms for multi-modal data
+     */
+    async applyAttentionMechanism(
+        data: MultiModalData[], 
+        attentionType: 'spatial' | 'temporal' | 'cross-modal' | 'cognitive'
+    ): Promise<{
+        attentionWeights: Record<string, number>;
+        focusedData: MultiModalData[];
+        attentionMap?: number[];
+    }> {
+        return this.openCogService.applyAttentionMechanism(data, attentionType);
+    }
+}
 }

@@ -30,9 +30,17 @@ import {
     UserBehaviorPattern,
     LearningContext,
     UserFeedback,
-    KnowledgeManagementService
+    KnowledgeManagementService,
+    // Multi-modal types
+    MultiModalData,
+    MultiModalPatternInput,
+    MultiModalPatternResult,
+    MultiModalLearningData,
+    ModalityType,
+    TensorData
 } from '../common';
 import { KnowledgeManagementServiceImpl } from './knowledge-management-service-impl';
+import { MultiModalProcessingService } from './multi-modal-processing-service';
 
 import { PLNReasoningEngine, PatternMatchingEngine, CodeAnalysisReasoningEngine } from './reasoning-engines';
 
@@ -59,11 +67,15 @@ export class AtomSpaceService implements OpenCogService {
     private patternEngine: PatternMatchingEngine;
     private codeAnalysisEngine: CodeAnalysisReasoningEngine;
 
+    // Multi-modal processing service
+    private multiModalService: MultiModalProcessingService;
+
     constructor() {
         this.knowledgeManagementService = new KnowledgeManagementServiceImpl();
         this.plnEngine = new PLNReasoningEngine();
         this.patternEngine = new PatternMatchingEngine();
         this.codeAnalysisEngine = new CodeAnalysisReasoningEngine();
+        this.multiModalService = new MultiModalProcessingService();
     }
 
     async addAtom(atom: Atom): Promise<string> {
@@ -1429,6 +1441,305 @@ export class AtomSpaceService implements OpenCogService {
         
         return areas;
     }
+
+    // ===== PHASE 5: MULTI-MODAL COGNITIVE PROCESSING METHODS =====
+
+    /**
+     * Process single multi-modal data
+     */
+    async processMultiModalData(data: MultiModalData): Promise<MultiModalData> {
+        return this.multiModalService.processMultiModalData(data);
+    }
+
+    /**
+     * Process batch of multi-modal data
+     */
+    async processMultiModalBatch(data: MultiModalData[]): Promise<MultiModalData[]> {
+        return this.multiModalService.processMultiModalBatch(data);
+    }
+
+    /**
+     * Recognize patterns in multi-modal data
+     */
+    async recognizeMultiModalPatterns(input: MultiModalPatternInput): Promise<MultiModalPatternResult[]> {
+        return this.multiModalService.recognizeMultiModalPatterns(input);
+    }
+
+    /**
+     * Learn from multi-modal data
+     */
+    async learnFromMultiModalData(data: MultiModalLearningData): Promise<void> {
+        // Store multi-modal learning data in atom space
+        const atom: Atom = {
+            type: 'MultiModalLearningAtom',
+            name: `multi_modal_learning_${Date.now()}`,
+            metadata: {
+                modalData: data.modalData,
+                crossModalLabels: data.crossModalLabels,
+                temporalSequence: data.temporalSequence,
+                cognitiveGoal: data.cognitiveGoal,
+                timestamp: Date.now()
+            }
+        };
+
+        await this.addAtom(atom);
+
+        // Also store in general learning history
+        await this.learn(data);
+    }
+
+    /**
+     * Get multi-modal learning statistics
+     */
+    async getMultiModalLearningStats(): Promise<{
+        totalMultiModalRecords: number;
+        modalityDistribution: Record<ModalityType, number>;
+        crossModalPatterns: number;
+        processingAccuracy: Record<ModalityType, number>;
+    }> {
+        return this.multiModalService.getMultiModalLearningStats();
+    }
+
+    /**
+     * Process tensor data with 4 degrees of freedom
+     */
+    async processTensorData(tensor: TensorData): Promise<TensorData> {
+        return this.multiModalService.processTensorData(tensor);
+    }
+
+    /**
+     * Perform specific tensor operation
+     */
+    async performTensorOperation(
+        tensor: TensorData, 
+        operation: string, 
+        parameters?: Record<string, any>
+    ): Promise<TensorData> {
+        return this.multiModalService.performTensorOperation(tensor, operation, parameters);
+    }
+
+    /**
+     * Fuse multiple tensor data
+     */
+    async fuseTensorData(
+        tensors: TensorData[], 
+        strategy: 'concatenation' | 'addition' | 'attention' | 'learned' = 'concatenation'
+    ): Promise<TensorData> {
+        return this.multiModalService.fuseTensorData(tensors, strategy);
+    }
+
+    /**
+     * Cross-modal reasoning
+     */
+    async reasonAcrossModalities(query: ReasoningQuery, modalData: MultiModalData[]): Promise<ReasoningResult> {
+        // First, process the multi-modal data
+        const processedData = await this.processMultiModalBatch(modalData);
+        
+        // Extract patterns from multi-modal data
+        const patterns = await this.recognizeMultiModalPatterns({
+            data: processedData,
+            context: {
+                task: 'cross-modal-reasoning',
+                domain: query.type
+            },
+            options: {
+                crossModal: true,
+                fusionStrategy: 'attention'
+            }
+        });
+
+        // Enhance the reasoning query with multi-modal context
+        const enhancedQuery: ReasoningQuery = {
+            ...query,
+            context: {
+                ...query.context,
+                multiModalData: processedData,
+                crossModalPatterns: patterns
+            }
+        };
+
+        // Perform reasoning using the enhanced query
+        return this.reason(enhancedQuery);
+    }
+
+    /**
+     * Analyze multi-modal context
+     */
+    async analyzeMultiModalContext(data: MultiModalData[]): Promise<{
+        context: any;
+        dominantModality: ModalityType;
+        modalityInteractions: Array<{
+            source: ModalityType;
+            target: ModalityType;
+            interaction: string;
+            strength: number;
+        }>;
+        cognitiveLoad: number;
+    }> {
+        if (data.length === 0) {
+            throw new Error('Cannot analyze empty multi-modal data array');
+        }
+
+        // Count modality frequencies
+        const modalityCounts: Record<ModalityType, number> = {} as Record<ModalityType, number>;
+        for (const item of data) {
+            modalityCounts[item.type] = (modalityCounts[item.type] || 0) + 1;
+        }
+
+        // Find dominant modality
+        const dominantModality = Object.entries(modalityCounts)
+            .reduce((max, [modality, count]) => 
+                count > modalityCounts[max] ? modality as ModalityType : max, 
+                Object.keys(modalityCounts)[0] as ModalityType
+            );
+
+        // Analyze modality interactions
+        const interactions: Array<{
+            source: ModalityType;
+            target: ModalityType;
+            interaction: string;
+            strength: number;
+        }> = [];
+
+        const modalities = Object.keys(modalityCounts) as ModalityType[];
+        for (let i = 0; i < modalities.length; i++) {
+            for (let j = i + 1; j < modalities.length; j++) {
+                const source = modalities[i];
+                const target = modalities[j];
+                const strength = Math.min(modalityCounts[source], modalityCounts[target]) / 
+                               Math.max(modalityCounts[source], modalityCounts[target]);
+                
+                interactions.push({
+                    source,
+                    target,
+                    interaction: 'complementary',
+                    strength
+                });
+            }
+        }
+
+        // Calculate cognitive load based on modality complexity
+        const modalityComplexity: Record<ModalityType, number> = {
+            text: 0.6,
+            image: 0.8,
+            audio: 0.7,
+            tensor: 0.9,
+            mixed: 1.0
+        };
+
+        const cognitiveLoad = Object.entries(modalityCounts)
+            .reduce((load, [modality, count]) => 
+                load + modalityComplexity[modality as ModalityType] * count, 0
+            ) / data.length;
+
+        return {
+            context: {
+                modalityDistribution: modalityCounts,
+                temporalSpan: data.length,
+                totalComplexity: cognitiveLoad,
+                timestamp: Date.now()
+            },
+            dominantModality,
+            modalityInteractions: interactions,
+            cognitiveLoad
+        };
+    }
+
+    /**
+     * Apply attention mechanisms for multi-modal data
+     */
+    async applyAttentionMechanism(
+        data: MultiModalData[], 
+        attentionType: 'spatial' | 'temporal' | 'cross-modal' | 'cognitive'
+    ): Promise<{
+        attentionWeights: Record<string, number>;
+        focusedData: MultiModalData[];
+        attentionMap?: number[];
+    }> {
+        if (data.length === 0) {
+            return {
+                attentionWeights: {},
+                focusedData: [],
+                attentionMap: []
+            };
+        }
+
+        const attentionWeights: Record<string, number> = {};
+        let attentionMap: number[] = [];
+
+        switch (attentionType) {
+            case 'spatial':
+                // Focus on spatial relationships in image/tensor data
+                data.forEach((item, i) => {
+                    if (item.type === 'image' || item.type === 'tensor') {
+                        attentionWeights[item.id || `item_${i}`] = 0.8;
+                        attentionMap.push(0.8);
+                    } else {
+                        attentionWeights[item.id || `item_${i}`] = 0.2;
+                        attentionMap.push(0.2);
+                    }
+                });
+                break;
+
+            case 'temporal':
+                // Focus on temporal sequence
+                data.forEach((item, i) => {
+                    const temporalWeight = 1.0 - (i / data.length) * 0.5; // Recent items get higher attention
+                    attentionWeights[item.id || `item_${i}`] = temporalWeight;
+                    attentionMap.push(temporalWeight);
+                });
+                break;
+
+            case 'cross-modal':
+                // Focus on modality transitions
+                data.forEach((item, i) => {
+                    const prevItem = i > 0 ? data[i - 1] : null;
+                    const weight = prevItem && prevItem.type !== item.type ? 0.9 : 0.5;
+                    attentionWeights[item.id || `item_${i}`] = weight;
+                    attentionMap.push(weight);
+                });
+                break;
+
+            case 'cognitive':
+                // Focus based on cognitive complexity
+                const complexityWeights = {
+                    text: 0.6,
+                    image: 0.8,
+                    audio: 0.7,
+                    tensor: 0.9,
+                    mixed: 1.0
+                };
+                data.forEach((item, i) => {
+                    const weight = complexityWeights[item.type];
+                    attentionWeights[item.id || `item_${i}`] = weight;
+                    attentionMap.push(weight);
+                });
+                break;
+        }
+
+        // Normalize attention weights
+        const totalWeight = Object.values(attentionWeights).reduce((sum, w) => sum + w, 0);
+        if (totalWeight > 0) {
+            Object.keys(attentionWeights).forEach(key => {
+                attentionWeights[key] /= totalWeight;
+            });
+            attentionMap = attentionMap.map(w => w / totalWeight);
+        }
+
+        // Filter focused data based on attention threshold
+        const attentionThreshold = 0.1;
+        const focusedData = data.filter((item, i) => {
+            const weight = attentionWeights[item.id || `item_${i}`];
+            return weight > attentionThreshold;
+        });
+
+        return {
+            attentionWeights,
+            focusedData,
+            attentionMap
+        };
+    }
+}
 
     getKnowledgeManagementService(): KnowledgeManagementService {
         return this.knowledgeManagementService;
