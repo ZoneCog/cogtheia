@@ -1,0 +1,35 @@
+{
+  "name": "cogtheia-ai-ide",
+  "version": "1.64.0",
+  "description": "Cogtheia AI-Powered IDE - Self-Contained Binary",
+  "main": "cogtheia-ai-ide.js",
+  "type": "self-contained-binary",
+  "platform": "cross-platform",
+  "created": "2025-09-09T11:18:19.257Z",
+  "features": {
+    "OpenCog AI Integration": "Advanced cognitive reasoning and learning",
+    "Cognitive Code Analysis": "Intelligent pattern recognition",
+    "Adaptive Learning": "System learns from user behavior",
+    "Pattern Recognition": "Advanced code understanding",
+    "Real-time Health Monitoring": "System status and performance tracking",
+    "REST API": "Programmatic access to AI features",
+    "Web Interface": "Browser-based dashboard"
+  },
+  "requirements": {
+    "Node.js": ">=18.0.0",
+    "Memory": "512MB minimum",
+    "Storage": "100MB",
+    "Network": "Optional (for external integrations)"
+  },
+  "usage": {
+    "Windows": "cogtheia.bat",
+    "Linux/macOS": "./cogtheia",
+    "Direct": "node cogtheia-ai-ide.js"
+  },
+  "endpoints": {
+    "Main Interface": "http://localhost:3000",
+    "Health Check": "http://localhost:3000/health",
+    "API Documentation": "http://localhost:3000/api/docs",
+    "IDE Access": "http://localhost:3000/ide"
+  }
+}

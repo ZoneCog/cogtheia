@@ -1,0 +1,26 @@
+{
+  "name": "cogtheia-portable",
+  "version": "1.64.0",
+  "description": "Cogtheia AI-Powered IDE - Portable Distribution",
+  "type": "portable-binaries",
+  "platform": "win32",
+  "architecture": "x64",
+  "created": "2025-09-09T11:14:34.019Z",
+  "features": {
+    "opencog_integration": true,
+    "cognitive_analysis": true,
+    "learning_systems": true,
+    "pattern_recognition": true,
+    "vscode_compatibility": true
+  },
+  "requirements": {
+    "nodejs": ">=20.0.0",
+    "ram": "4GB minimum",
+    "storage": "2GB free space"
+  },
+  "launchers": {
+    "windows": "Start-Cogtheia.bat",
+    "linux_macos": "start-cogtheia.sh",
+    "powershell": "Start-Cogtheia.ps1"
+  }
+}

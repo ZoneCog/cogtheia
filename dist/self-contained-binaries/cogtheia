@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "Starting Cogtheia AI-Powered IDE..."
+echo "OpenCog Integration: ACTIVE"
+echo ""
+cd "$(dirname "$0")"
+node cogtheia-ai-ide.js "$@"
