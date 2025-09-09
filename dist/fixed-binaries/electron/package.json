@@ -1,0 +1,16 @@
+{
+  "name": "cogtheia-electron-fixed",
+  "version": "1.64.0-fixed",
+  "description": "Cogtheia AI-Powered IDE - Fixed Electron Version",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^latest"
+  },
+  "dependencies": {
+    "express": "^4.18.0"
+  }
+}

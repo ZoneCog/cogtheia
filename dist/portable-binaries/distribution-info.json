@@ -5,7 +5,7 @@
   "type": "portable-binaries",
   "platform": "win32",
   "architecture": "x64",
-  "created": "2025-09-09T11:14:34.019Z",
+  "created": "2025-09-09T17:43:26.406Z",
   "features": {
     "opencog_integration": true,
     "cognitive_analysis": true,

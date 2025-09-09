@@ -1,0 +1,12 @@
+{
+  "name": "cogtheia-browser-fixed",
+  "version": "1.64.0-fixed",
+  "description": "Cogtheia AI-Powered IDE - Fixed Browser Version",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
