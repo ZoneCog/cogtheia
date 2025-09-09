@@ -1,0 +1,9 @@
+{
+  "name": "cogtheia-browser",
+  "version": "1.64.0",
+  "description": "Cogtheia - AI-Powered IDE (Browser Version)",
+  "main": "start-cogtheia.js",
+  "scripts": {
+    "start": "node start-cogtheia.js"
+  }
+}

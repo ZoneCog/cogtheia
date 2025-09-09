@@ -1,0 +1,9 @@
+{
+  "name": "cogtheia-desktop",
+  "version": "1.64.0",
+  "description": "Cogtheia - AI-Powered IDE (Desktop Version)",
+  "main": "start-cogtheia-desktop.js",
+  "scripts": {
+    "start": "node start-cogtheia-desktop.js"
+  }
+}

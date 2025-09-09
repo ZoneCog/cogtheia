@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  cogtheia:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cogtheia:latest
+    container_name: cogtheia-ai-ide
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - THEIA_LOG_LEVEL=info
+      - COGTHEIA_AI_ENABLED=true
+      - COGTHEIA_AI_OPENCOG_ENABLED=true
+    volumes:
+      - ./workspace:/app/workspace
+      - cogtheia_data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - cogtheia-network
+
+  # Optional: Redis for caching (mentioned in OpenCog package)
+  redis:
+    image: redis:7-alpine
+    container_name: cogtheia-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks:
+      - cogtheia-network
+    command: redis-server --appendonly yes
+
+  # Optional: PostgreSQL for data persistence
+  postgres:
+    image: postgres:15-alpine
+    container_name: cogtheia-postgres
+    environment:
+      - POSTGRES_DB=cogtheia
+      - POSTGRES_USER=cogtheia
+      - POSTGRES_PASSWORD=cogtheia_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - cogtheia-network
+
+  # Optional: Prometheus for monitoring (as mentioned in validation)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: cogtheia-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    networks:
+      - cogtheia-network
+
+  # Optional: Grafana for dashboards
+  grafana:
+    image: grafana/grafana:latest
+    container_name: cogtheia-grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=cogtheia_admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    restart: unless-stopped
+    networks:
+      - cogtheia-network
+
+networks:
+  cogtheia-network:
+    driver: bridge
+
+volumes:
+  cogtheia_data:
+  redis_data:
+  postgres_data:
+  prometheus_data:
+  grafana_data:
